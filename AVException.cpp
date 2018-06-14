@@ -6,7 +6,7 @@ AVException::AVException(int err, std::string msg) {
 }
 
 AVException::~AVException() throw () {
-	std::cerr << "Exiting Exception\n";
+	std::cerr << "Exiting Exception" << std::endl;
 }
 
 std::string AVException::getMessage(void) { return message; }
