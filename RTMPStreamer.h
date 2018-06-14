@@ -54,10 +54,12 @@ private:
 	SwsContext*			sws_ctx;
 	AVFrame*			frame_yuv420p;
 	int					pts = 0;
+	int					frame_index = 0;
+	int64_t				start_time;
 public:
 	Encoder(int width, int height, const char* url, long bitrate);
 	~Encoder();
 	int write(AVFrame* frame);
-	AVFrame* gen_frame(unsigned char* buffer, int w, int h);
+	AVFrame* write_frame(unsigned char* buffer, int w, int h);
 };
 

@@ -8,24 +8,22 @@ extern "C"
 #include "include\turbojpeg.h"
 }
 
-#define COLOR_COMPONENTS 3
-#define OUTPUT_CODEC AV_CODEC_ID_H264
-#define OUTPUT_PIX_FMT AV_PIX_FMT_YUV420P
+#define COLOR_COMPONENTS	3
+#define OUTPUT_CODEC		AV_CODEC_ID_H264
+#define OUTPUT_PIX_FMT		AV_PIX_FMT_YUV420P
+#define INPUT_PIX_FMT		AV_PIX_FMT_RGB24
 
 #define DEFAULT_WIDTH	960
 #define DEFAULT_HEIGHT	640
 #define DEFAULT_RATE	4 * 1024 * 1024
 #define DEFAULT_URL		"rtmp://127.0.0.1:1935/live/test"
 
-static tjhandle _jpegDecompressor = nullptr;
+static tjhandle _jpegDecompressor			= nullptr;
 
-static int frame_index = 0;
-static int64_t start_time;
+Encoder* RTMPStreamer::encoder				= nullptr;
 
-Encoder* RTMPStreamer::encoder = nullptr;
-
-bool RTMPStreamer::jpeg_decompress_inited = false;
-bool RTMPStreamer::av_utils_inited = false;
+bool RTMPStreamer::jpeg_decompress_inited	= false;
+bool RTMPStreamer::av_utils_inited			= false;
 
 RTMPStreamer::RTMPStreamer() {
 	
@@ -46,13 +44,13 @@ void RTMPStreamer::push_buffer(unsigned char* pbyteImage, EdsUInt64 size) {
 	memcpy(pBuff, pbyteImage, size);
 	::GlobalUnlock(hMem);
 
-	// decode jpeg to RGB format
+	// decompress jpeg to RGB buffer
 	EdsUInt64 w, h;
 	unsigned char* buffer = decode_image(static_cast<unsigned char *>(pBuff), size, w, h);
 	
 
 	// obtain a frame
-	auto frame = encoder->gen_frame(buffer, w, h);
+	auto frame = encoder->write_frame(buffer, w, h);
 	encoder->write(frame);
 
 	// release resource
@@ -66,9 +64,6 @@ bool RTMPStreamer::init_componets() {
 }
 
 bool RTMPStreamer::init_componets(int w, int h, const char* url, long bitrate) {
-	frame_index = 0;
-	start_time = av_gettime();
-
 	if (!av_utils_inited) {
 		bool result = init_av_utils(w, h, url, bitrate);
 		if (!result) {
@@ -139,12 +134,16 @@ unsigned char* RTMPStreamer::decode_image(unsigned char* pcBuffer, EdsUInt64 siz
 	unsigned char* buffer = static_cast<unsigned char*>(malloc(buffer_size));
 
 	// decompress the image
-	tjDecompress2(_jpegDecompressor, pcBuffer, size, buffer, width, 0/*pitch*/, height, TJPF_RGB, TJFLAG_FASTDCT);
+	tjDecompress2(_jpegDecompressor, pcBuffer, size, buffer, width, 0, height, TJPF_RGB, TJFLAG_FASTDCT);
 
 	return buffer;
 }
 
 Encoder::Encoder(int width, int height, const char* url, long bitrate) {
+	// reset frame counter
+	frame_index = 0;
+	start_time = av_gettime();
+
 	int err = 0;
 	
 	AVCodec*			codec = nullptr;
@@ -160,7 +159,7 @@ Encoder::Encoder(int width, int height, const char* url, long bitrate) {
 	// init a sws context
 	sws_ctx = sws_getContext(
 		width, height,
-		AV_PIX_FMT_RGB24,
+		INPUT_PIX_FMT,
 		width, height,
 		OUTPUT_PIX_FMT,
 		SWS_BILINEAR, nullptr, nullptr, nullptr);
@@ -208,23 +207,23 @@ Encoder::Encoder(int width, int height, const char* url, long bitrate) {
 		throw AVException(EPERM, "can't create new stream");
 	}
 
-	// set stream time_base
+	// set stream time_base, assume that camera frame rate is 10 fps 
 	st->time_base = AVRational{ 1, 10 };
 
 	// set codec_ctx to stream's codec structure
 	codec_ctx = st->codec;
 
 	
-	// put sample parameters
-	codec_ctx->sample_fmt = codec->sample_fmts ? codec->sample_fmts[0] : AV_SAMPLE_FMT_S16;
-	codec_ctx->width = width;
-	codec_ctx->height = height;
-	codec_ctx->time_base = st->time_base;
-	codec_ctx->pix_fmt = OUTPUT_PIX_FMT;
-	codec_ctx->bit_rate = bitrate;
+	// set sample parameters
+	codec_ctx->sample_fmt	= codec->sample_fmts ? codec->sample_fmts[0] : AV_SAMPLE_FMT_S16;
+	codec_ctx->width		= width;
+	codec_ctx->height		= height;
+	codec_ctx->bit_rate		= bitrate;
+	codec_ctx->time_base	= st->time_base;
+	codec_ctx->pix_fmt		= OUTPUT_PIX_FMT;
 	
 	//H.264 specific options
-	codec_ctx->gop_size = 5;
+	codec_ctx->gop_size = 5; 
 	codec_ctx->level = 31;
 	err = av_opt_set(codec_ctx->priv_data, "crf", "12", 0);
 	if (err < 0) {
@@ -251,7 +250,7 @@ Encoder::Encoder(int width, int height, const char* url, long bitrate) {
 		throw AVException(err, "avcodec_open2");
 	}
 
-	// dump av format informations
+	// dump av format informations (debug)
 	av_dump_format(fmt_ctx, 0, url, 1);
 
 
@@ -269,10 +268,10 @@ Encoder::Encoder(int width, int height, const char* url, long bitrate) {
 		throw AVException(err, "avformat_write_header");
 	}
 
-	// init frames
+	// init a frame
 	frame_yuv420p = av_frame_alloc();
-
-	// link buffer to frame
+	
+	// link a buffer to the frame
 	int numBytes = avpicture_get_size(OUTPUT_PIX_FMT, width, height);
 	uint8_t* yuv_buffer = static_cast<uint8_t*>(av_malloc(numBytes * sizeof(uint8_t)));
 	avpicture_fill((AVPicture *)frame_yuv420p, yuv_buffer, OUTPUT_PIX_FMT, width, height);
@@ -281,22 +280,30 @@ Encoder::Encoder(int width, int height, const char* url, long bitrate) {
 Encoder::~Encoder() {
 	int err;
 	std::cout << "cleaning Encoder" << std::endl;
-	//Write pending packets
-	while ((err = write((AVFrame*)NULL)) == 1) {};
+	
+	// flush pending packets
+	while ((err = write(static_cast<AVFrame*>(nullptr))) == 1) {};
 	if (err < 0) {
 		std::cout << "error writing delayed frame" << std::endl;
 	}
-	
-	//Write file trailer before exit
+
+	// write file trailer before exit
 	av_write_trailer(this->fmt_ctx);
 	
-	//close file
+	// close file
 	avio_close(fmt_ctx->pb);
+
+	// close av format context
 	avformat_free_context(this->fmt_ctx);
+
+	// close codec context
+	avcodec_flush_buffers(codec_ctx);
+	avcodec_free_context(&codec_ctx);
 	
-	// clear frame
+	// clean the frame
 	av_frame_free(&frame_yuv420p);
 
+	// free sws context
 	sws_freeContext(sws_ctx);
 }
 
@@ -339,22 +346,21 @@ int Encoder::write(AVFrame* frame) {
 
 		// sync
 		if (pts_time > now_time) {
-			// wait
+			// wait (slow down, will result in accumulated latency)
 			// av_usleep(pts_time - now_time);
 		} else if (pts_time < now_time) {
-			// jump a frame
+			// jump a frame (speed up)
 			frame_index ++;
 			frame->pts ++;
 			pkt.pts += pts_gap;
 			pkt.dts += pts_gap;
 		}
 		
-		//write_frame will take care of freeing the packet.
+		// write_frame will take care of freeing the packet.
 		err = av_interleaved_write_frame(this->fmt_ctx, &pkt);
 		frame_index++;
 		
 end:	av_free_packet(&pkt);
-		
 		if (err < 0) {
 			std::cout << AVException(err, "write frame").what() << std::endl;
 			return err;
@@ -365,7 +371,7 @@ end:	av_free_packet(&pkt);
 	}
 }
 
-AVFrame* Encoder::gen_frame(unsigned char* buffer, int w, int h) {
+AVFrame* Encoder::write_frame(unsigned char* buffer, int w, int h) {
 	uint8_t* inData[1] = { buffer };
 	int      inLinesize[1] = { 3 * w };
 	int h_slice = sws_scale(sws_ctx, inData, 
