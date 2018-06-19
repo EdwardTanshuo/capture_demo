@@ -119,6 +119,7 @@
     <ClCompile Include="CameraControl.cpp" />
     <ClCompile Include="CameraControlDlg.cpp" />
     <ClCompile Include="Displayer.cpp" />
+    <ClCompile Include="RTMPPusher.cpp" />
     <ClCompile Include="RTMPStreamer.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -169,6 +170,7 @@
     <ClInclude Include="include\jpeglib.h" />
     <ClInclude Include="include\turbojpeg.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="RTMPPusher.h" />
     <ClInclude Include="RTMPStreamer.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>

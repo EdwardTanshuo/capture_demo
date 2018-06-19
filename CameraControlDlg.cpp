@@ -83,12 +83,15 @@ void CCameraControlDlg::setupListener(ActionListener* listener)
 	_btnEndEVF.addActionListener(listener);
 	_displayer.setActionCommand("downloadEVF");
 	_displayer.addActionListener(listener);
+	_pusher.setActionCommand("downloadEVF");
+	_pusher.addActionListener(listener);
 }
 
 
 void CCameraControlDlg::setupObserver(Observable* ob)
 {
 	ob->addObserver(static_cast<Observer*>(&_displayer));
+	ob->addObserver(static_cast<Observer*>(&_pusher));
 }
 
 void CCameraControlDlg::OnClose()

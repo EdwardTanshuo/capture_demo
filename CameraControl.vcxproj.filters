@@ -57,6 +57,9 @@
     <ClCompile Include="Displayer.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="RTMPPusher.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActionButton.h">
@@ -192,6 +195,9 @@
       <Filter>header\EDSDK</Filter>
     </ClInclude>
     <ClInclude Include="Displayer.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="RTMPPusher.h">
       <Filter>header</Filter>
     </ClInclude>
   </ItemGroup>

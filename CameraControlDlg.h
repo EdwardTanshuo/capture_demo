@@ -21,6 +21,8 @@
 
 
 #include "Displayer.h"
+#include "RTMPPusher.h"
+
 #include "ActionButton.h"
 
 
@@ -50,6 +52,7 @@ public:
 	CActionButton	_btnEndEVF;
 	
 	Displayer		_displayer;
+	RTMPPusher      _pusher;
 	
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
