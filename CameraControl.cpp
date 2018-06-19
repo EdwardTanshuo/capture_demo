@@ -58,13 +58,6 @@ int CCameraControlApp::init_camera() {
 	EdsCameraListRef cameraList = nullptr;
 	EdsUInt32	 count = 0;
 
-	// initialization of SDK
-	err = EdsInitializeSDK();
-
-	if (err == EDS_ERR_OK) {
-		isSDKLoaded = true;
-	}
-
 	// acquisition of camera list
 	if (err == EDS_ERR_OK) {
 		err = EdsGetCameraList(&cameraList);
@@ -103,18 +96,12 @@ int CCameraControlApp::init_camera() {
 		if (_model == nullptr) {
 			err = EDS_ERR_DEVICE_NOT_FOUND;
 		}
-	}
-
-	if (err != EDS_ERR_OK) {
+	} else {
 		goto end;
 	}
+	
 
 	if (err == EDS_ERR_OK) {
-		// create camera controller
-		if (_controller == nullptr) {
-			_controller = new CameraController();
-		}
-
 		_controller->setCameraModel(_model);
 
 		// set property event handler
@@ -201,21 +188,27 @@ BOOL CCameraControlApp::InitInstance() {
 	_controller = new CameraController();
 
 	// Initialization of SDK
-	int err = init_camera();
-
+	int err = EdsInitializeSDK();
 	if (err == EDS_ERR_OK) {
-		//Create View Dialog
-		CCameraControlDlg			view;
-
-		_controller->setCameraModel(_model);
-		_model->addObserver(&view);
-		// Send Model Event to view	
-		view.setCameraController(_controller);
-
-		m_pMainWnd = &view;
-		INT_PTR nResponse = view.DoModal();
-		return true;
+		isSDKLoaded = true;
 	}
+	else {
+		::MessageBox(NULL, "Cannot init sdk", NULL, MB_OK);
+	}
+	
+	err = init_camera();
+
+	//Create View Dialog
+	CCameraControlDlg			view;
+
+	_controller->setCameraModel(_model);
+	_model->addObserver(&view);
+	// Send Model Event to view	
+	view.setCameraController(_controller);
+
+	m_pMainWnd = &view;
+	INT_PTR nResponse = view.DoModal();
+	return true;
 
 	return false;
 }

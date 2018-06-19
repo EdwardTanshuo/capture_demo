@@ -24,6 +24,9 @@
 #include "CameraController.h"
 #include "CameraModel.h"
 
+#include "Displayer.h"
+#include "RTMPPusher.h"
+
 // CCameraControlApp:
 // CCameraControlApp dialog used for App About
 
@@ -31,6 +34,9 @@ class CCameraControlApp : public CWinApp
 {
 public:
 	CCameraControlApp();
+
+	Displayer				_displayer;
+	RTMPPusher				_pusher;
 
 // Overrides
 	public:
@@ -40,8 +46,9 @@ public:
 	void	release_camera();
 
 	CameraModel*			_model;
-	CameraController*		_controller;
 	EdsCameraRef			_camera;
+
+	CameraController*		_controller;
 
 	bool	isSDKLoaded = false;
 	bool	has_stated	= false;
