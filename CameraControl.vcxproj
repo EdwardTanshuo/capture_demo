@@ -115,30 +115,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ActionButton.cpp" />
-    <ClCompile Include="AEMode.cpp" />
-    <ClCompile Include="Av.cpp" />
     <ClCompile Include="AVException.cpp" />
     <ClCompile Include="CameraControl.cpp" />
     <ClCompile Include="CameraControlDlg.cpp" />
-    <ClCompile Include="EvfAFMode.cpp" />
     <ClCompile Include="EVFPictureBox.cpp" />
-    <ClCompile Include="EvfZoomButton.cpp" />
-    <ClCompile Include="ExposureComp.cpp" />
-    <ClCompile Include="ImageQuality.cpp" />
-    <ClCompile Include="Iso.cpp" />
-    <ClCompile Include="MeteringMode.cpp" />
-    <ClCompile Include="PropertyComboBox.cpp" />
     <ClCompile Include="RTMPStreamer.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Tv.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActionButton.h" />
-    <ClInclude Include="AEMode.h" />
-    <ClInclude Include="Av.h" />
     <ClInclude Include="AVException.h" />
     <ClInclude Include="CameraControl.h" />
     <ClInclude Include="CameraControlDlg.h" />
@@ -171,11 +159,7 @@
     <ClInclude Include="Command\SetPropertyCommand.h" />
     <ClInclude Include="Command\StartEvfCommand.h" />
     <ClInclude Include="Command\TakePictureCommand.h" />
-    <ClInclude Include="EvfAFMode.h" />
     <ClInclude Include="EVFPictureBox.h" />
-    <ClInclude Include="EvfZoomButton.h" />
-    <ClInclude Include="ExposureComp.h" />
-    <ClInclude Include="ImageQuality.h" />
     <ClInclude Include="include\EDSDK.h" />
     <ClInclude Include="include\EDSDKErrors.h" />
     <ClInclude Include="include\EDSDKTypes.h" />
@@ -184,13 +168,9 @@
     <ClInclude Include="include\jmorecfg.h" />
     <ClInclude Include="include\jpeglib.h" />
     <ClInclude Include="include\turbojpeg.h" />
-    <ClInclude Include="Iso.h" />
-    <ClInclude Include="MeteringMode.h" />
-    <ClInclude Include="PropertyComboBox.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="RTMPStreamer.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="Tv.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\CameraControl.ico" />

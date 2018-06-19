@@ -39,46 +39,16 @@
     <ClCompile Include="ActionButton.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="AEMode.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="Av.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
     <ClCompile Include="CameraControl.cpp">
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="CameraControlDlg.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="EvfAFMode.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
     <ClCompile Include="EVFPictureBox.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="EvfZoomButton.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="ExposureComp.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="ImageQuality.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="Iso.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="MeteringMode.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="PropertyComboBox.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
     <ClCompile Include="stdafx.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="Tv.cpp">
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="RTMPStreamer.cpp">
@@ -92,49 +62,19 @@
     <ClInclude Include="ActionButton.h">
       <Filter>header</Filter>
     </ClInclude>
-    <ClInclude Include="AEMode.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="Av.h">
-      <Filter>header</Filter>
-    </ClInclude>
     <ClInclude Include="CameraControl.h">
       <Filter>header</Filter>
     </ClInclude>
     <ClInclude Include="CameraControlDlg.h">
       <Filter>header</Filter>
     </ClInclude>
-    <ClInclude Include="EvfAFMode.h">
-      <Filter>header</Filter>
-    </ClInclude>
     <ClInclude Include="EVFPictureBox.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="EvfZoomButton.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="ExposureComp.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="ImageQuality.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="Iso.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="MeteringMode.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="PropertyComboBox.h">
       <Filter>header</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
       <Filter>header</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="Tv.h">
       <Filter>header</Filter>
     </ClInclude>
     <ClInclude Include="Command\CloseSessionCommand.h">

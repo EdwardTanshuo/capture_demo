@@ -20,18 +20,9 @@
 #include "CameraController.h"
 
 
-#include "AEMode.h"
-#include "Tv.h"
-#include "Av.h"
-#include "Iso.h"
-#include "MeteringMode.h"
-#include "ExposureComp.h"
-#include "ImageQuality.h"
 #include "EVFPictureBox.h"
-#include "EvfAFMode.h"
-
 #include "ActionButton.h"
-#include "EvfZoomButton.h"
+
 
 // CCameraControlDlg Dialog
 class CCameraControlDlg : public CDialog, public ActionSource, public Observer
@@ -55,38 +46,11 @@ public:
 	//Dialog data
 	enum { IDD = IDD_CAMERACONTROL_DIALOG };
 	
-	CActionButton	_btnTakePicture;
 	CActionButton	_btnStartEVF;
 	CActionButton	_btnEndEVF;
-	CActionButton	_btnFocusNear3;
-	CActionButton	_btnFocusNear2;
-	CActionButton	_btnFocusNear1;
-	CActionButton	_btnFocusFar3;
-	CActionButton	_btnFocusFar2;
-	CActionButton	_btnFocusFar1;
-	CActionButton	_btnFocusUp;
-	CActionButton	_btnFocusDown;
-	CActionButton	_btnFocusLeft;
-	CActionButton	_btnFocusRight;
-	CActionButton	_btnZoomFit;
-	CEvfZoomButton	_btnZoomZoom;
-	CProgressCtrl	_progress;
-	CEdit			_edit;
+	
 	CEVFPictureBox	_pictureBox;
-	CAEMode			_comboAEMode;
-	CTv				_comboTv;
-	CAv				_comboAv;
-	CIso			_comboIso;
-	CMeteringMode	_comboMeteringMode;
-	CExposureComp	_comboExposureComp;
-	CImageQuality	_comboImageQuality;
-	CActionButton	_btnPressingHalfway;
-	CActionButton	_btnPressingCompletely;
-	CActionButton	_btnPressingOff;
-	CEvfAFMode		_comboEvfAFMode;
-	CActionButton	_btnEvfAfON;
-	CActionButton	_btnEvfAfOFF;
-
+	
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
 
