@@ -99,7 +99,7 @@ public:
 	{
 		//When using the SDK from another thread in Windows, 
 		// you must initialize the COM library by calling CoInitialize 
-		CoInitializeEx( NULL, COINIT_MULTITHREADED );
+		CoInitializeEx(nullptr, COINIT_MULTITHREADED );
 
 		_running = true;
 		while (_running)
@@ -107,7 +107,7 @@ public:
 			Sleep(1);
 
 			Command* command = take();
-			if(command != NULL)
+			if(command != nullptr && command->getCameraModel() != nullptr)
 			{
 				bool complete = command->execute();
 				
