@@ -44,6 +44,9 @@ CCameraControlApp::CCameraControlApp()
 {
 	// TODO: add construction code here,
 	// Place all significant initialization in InitInstance
+	_camera = nullptr;
+	_controller = nullptr;
+	_model = nullptr;
 }
 
 
@@ -51,6 +54,156 @@ CCameraControlApp::CCameraControlApp()
 
 CCameraControlApp theApp;
 
+int CCameraControlApp::init_camera() {
+	EdsError	 err = EDS_ERR_OK;
+	EdsCameraListRef cameraList = nullptr;
+	EdsUInt32	 count = 0;
+
+	// initialization of SDK
+	err = EdsInitializeSDK();
+
+	if (err == EDS_ERR_OK) {
+		isSDKLoaded = true;
+	}
+
+	// acquisition of camera list
+	if (err == EDS_ERR_OK) {
+		err = EdsGetCameraList(&cameraList);
+	}
+
+	// acquisition of number of Cameras
+	if (err == EDS_ERR_OK) {
+		err = EdsGetChildCount(cameraList, &count);
+		if (count == 0) {
+			err = EDS_ERR_DEVICE_NOT_FOUND;
+		}
+	}
+
+	// acquisition of camera at the head of the list
+	if (err == EDS_ERR_OK) {
+		err = EdsGetChildAtIndex(cameraList, 0, &_camera);
+	}
+
+	// acquisition of camera information
+	EdsDeviceInfo deviceInfo;
+	if (err == EDS_ERR_OK) {
+		err = EdsGetDeviceInfo(_camera, &deviceInfo);
+		if (err == EDS_ERR_OK && _camera == nullptr) {
+			err = EDS_ERR_DEVICE_NOT_FOUND;
+		}
+	}
+
+	// release camera list
+	if (cameraList != nullptr) {
+		EdsRelease(cameraList);
+	}
+
+	// create Camera model
+	if (err == EDS_ERR_OK) {
+		_model = cameraModelFactory(_camera, deviceInfo);
+		if (_model == nullptr) {
+			err = EDS_ERR_DEVICE_NOT_FOUND;
+		}
+	}
+
+	if (err != EDS_ERR_OK) {
+		goto end;
+	}
+
+	if (err == EDS_ERR_OK) {
+		// create camera controller
+		if (_controller == nullptr) {
+			_controller = new CameraController();
+		}
+
+		_controller->setCameraModel(_model);
+
+		if (err == EDS_ERR_OK) {
+			//The communication with the camera begins
+			err = EdsOpenSession(_camera);
+		}
+		else {
+			goto end;
+		}
+
+		// set property event handler
+		if (err == EDS_ERR_OK) {
+			err = EdsSetPropertyEventHandler(_camera, kEdsPropertyEvent_All, CameraEventListener::handlePropertyEvent, (EdsVoid *)_controller);
+		}
+		else {
+			goto end;
+		}
+
+		// set object event handler
+		if (err == EDS_ERR_OK) {
+			err = EdsSetObjectEventHandler(_camera, kEdsObjectEvent_All, CameraEventListener::handleObjectEvent, (EdsVoid *)_controller);
+		}
+		else {
+			goto end;
+		}
+
+		// set event handler
+		if (err == EDS_ERR_OK) {
+			err = EdsSetCameraStateEventHandler(_camera, kEdsStateEvent_All, CameraEventListener::handleStateEvent, (EdsVoid *)_controller);
+		}
+		else {
+			goto end;
+		}
+
+		if (err == EDS_ERR_OK)
+			return err;
+	}
+
+end:
+	// release Camera
+	if (_camera != nullptr) {
+		EdsRelease(_camera);
+		_camera = nullptr;
+	}
+
+	// termination of sdk
+	if (isSDKLoaded) {
+		EdsTerminateSDK();
+		isSDKLoaded = false;
+	}
+
+	if (_model != nullptr) {
+		delete _model;
+		_model = nullptr;
+	}
+
+	if (_controller != nullptr) {
+		_controller->setCameraModel(nullptr);
+	}
+
+	// since the dialog has been closed, return FALSE so that we exit the
+	// application, rather than start the application's message pump.
+	return err;
+}
+
+void CCameraControlApp::release_camera() {
+	// release Camera
+	if (_camera != nullptr) {
+		EdsRelease(_camera);
+		_camera = nullptr;
+	}
+
+	// termination of sdk
+	if (isSDKLoaded) {
+		EdsTerminateSDK();
+		isSDKLoaded = false;
+	}
+
+	if (_model != nullptr) {
+		delete _model;
+		_model = nullptr;
+	}
+
+	if (_controller != nullptr) {
+		_controller->setCameraModel(nullptr);
+	}
+
+}
 
 
 // CCameraControlApp initialization
@@ -125,10 +278,6 @@ BOOL CCameraControlApp::InitInstance()
 		}
 	}
 
-	if(err != EDS_ERR_OK)
-	{
-		::MessageBox(NULL,"Cannot detect camera",NULL,MB_OK);
-	}
 
 	if(err == EDS_ERR_OK )
 	{
@@ -183,7 +332,6 @@ BOOL CCameraControlApp::InitInstance()
 		delete _model;
 		_model = NULL;
 	}
-
 
 	if(_controller != NULL)
 	{

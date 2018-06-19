@@ -36,12 +36,18 @@ public:
 	public:
 	virtual BOOL InitInstance();
 
+	int		init_camera();
+	void	release_camera();
 
-	CameraModel*		_model;
-	CameraController*	_controller;
+	CameraModel*			_model;
+	CameraController*		_controller;
+	EdsCameraRef			_camera;
 
-	friend CameraController* getController();
-	friend CameraModel* getModel();
+	bool	isSDKLoaded = false;
+	bool	has_stated	= false;
+
+	friend CameraController*	getController();
+	friend CameraModel*			getModel();
 
 // Implementation
 

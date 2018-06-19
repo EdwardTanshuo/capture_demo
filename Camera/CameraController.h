@@ -170,9 +170,7 @@ public:
 			_processor.join();		
 		}
 
-/////////////////////////////
-//		EVF Control
-/////////////////////////////
+
 
 		if ( command == "startEVF" )
 		{
