@@ -118,7 +118,7 @@
     <ClCompile Include="AVException.cpp" />
     <ClCompile Include="CameraControl.cpp" />
     <ClCompile Include="CameraControlDlg.cpp" />
-    <ClCompile Include="EVFPictureBox.cpp" />
+    <ClCompile Include="Displayer.cpp" />
     <ClCompile Include="RTMPStreamer.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -159,7 +159,7 @@
     <ClInclude Include="Command\SetPropertyCommand.h" />
     <ClInclude Include="Command\StartEvfCommand.h" />
     <ClInclude Include="Command\TakePictureCommand.h" />
-    <ClInclude Include="EVFPictureBox.h" />
+    <ClInclude Include="Displayer.h" />
     <ClInclude Include="include\EDSDK.h" />
     <ClInclude Include="include\EDSDKErrors.h" />
     <ClInclude Include="include\EDSDKTypes.h" />

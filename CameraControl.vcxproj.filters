@@ -45,9 +45,6 @@
     <ClCompile Include="CameraControlDlg.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="EVFPictureBox.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>source</Filter>
     </ClCompile>
@@ -55,6 +52,9 @@
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="AVException.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="Displayer.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -66,9 +66,6 @@
       <Filter>header</Filter>
     </ClInclude>
     <ClInclude Include="CameraControlDlg.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="EVFPictureBox.h">
       <Filter>header</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
@@ -193,6 +190,9 @@
     </ClInclude>
     <ClInclude Include="include\EDSDKTypes.h">
       <Filter>header\EDSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="Displayer.h">
+      <Filter>header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

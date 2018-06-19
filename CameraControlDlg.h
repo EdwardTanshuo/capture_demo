@@ -20,7 +20,7 @@
 #include "CameraController.h"
 
 
-#include "EVFPictureBox.h"
+#include "Displayer.h"
 #include "ActionButton.h"
 
 
@@ -49,7 +49,7 @@ public:
 	CActionButton	_btnStartEVF;
 	CActionButton	_btnEndEVF;
 	
-	CEVFPictureBox	_pictureBox;
+	Displayer		_displayer;
 	
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support

@@ -44,7 +44,7 @@ CCameraControlDlg::CCameraControlDlg(CWnd* pParent )
 void CCameraControlDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_PICT, _pictureBox);
+	DDX_Control(pDX, IDC_PICT, _displayer);
 	DDX_Control(pDX, IDC_BUTTON2, _btnStartEVF);
 	DDX_Control(pDX, IDC_BUTTON3, _btnEndEVF);
 }
@@ -81,14 +81,14 @@ void CCameraControlDlg::setupListener(ActionListener* listener)
 	_btnStartEVF.addActionListener(listener);
 	_btnEndEVF.setActionCommand("endEVF");
 	_btnEndEVF.addActionListener(listener);
-	_pictureBox.setActionCommand("downloadEVF");
-	_pictureBox.addActionListener(listener);
+	_displayer.setActionCommand("downloadEVF");
+	_displayer.addActionListener(listener);
 }
 
 
 void CCameraControlDlg::setupObserver(Observable* ob)
 {
-	ob->addObserver(static_cast<Observer*>(&_pictureBox));
+	ob->addObserver(static_cast<Observer*>(&_displayer));
 }
 
 void CCameraControlDlg::OnClose()
