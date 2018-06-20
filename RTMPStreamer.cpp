@@ -18,20 +18,20 @@ extern "C"
 #define DEFAULT_RATE	4 * 1024 * 1024
 #define DEFAULT_URL		"rtmp://127.0.0.1:1935/live/test"
 
-static tjhandle _jpegDecompressor			= nullptr;
+static tjhandle _jpegDecompressor = nullptr;
 
-Encoder* RTMPStreamer::encoder				= nullptr;
+Encoder* RTMPStreamer::encoder = nullptr;
 
-bool RTMPStreamer::jpeg_decompress_inited	= false;
-bool RTMPStreamer::av_utils_inited			= false;
+bool RTMPStreamer::jpeg_decompress_inited = false;
+bool RTMPStreamer::av_utils_inited = false;
 
 RTMPStreamer::RTMPStreamer() {
-	
+
 }
 
 
 RTMPStreamer::~RTMPStreamer() {
-	
+
 }
 
 void RTMPStreamer::push_buffer(unsigned char* pbyteImage, EdsUInt64 size) {
@@ -47,7 +47,7 @@ void RTMPStreamer::push_buffer(unsigned char* pbyteImage, EdsUInt64 size) {
 	// decompress jpeg to RGB buffer
 	EdsUInt64 w, h;
 	unsigned char* buffer = decode_image(static_cast<unsigned char *>(pBuff), size, w, h);
-	
+
 
 	// obtain a frame
 	auto frame = encoder->write_frame(buffer, w, h);
@@ -69,7 +69,8 @@ bool RTMPStreamer::init_componets(int w, int h, const char* url, long bitrate) {
 		if (!result) {
 			return false;
 		}
-	} else {
+	}
+	else {
 		OutputDebugStringW(L"[WARNING] - av utils has been inited, skip.");
 	}
 
@@ -77,8 +78,9 @@ bool RTMPStreamer::init_componets(int w, int h, const char* url, long bitrate) {
 		bool result = init_jpeg_decompressor();
 		if (!result) {
 			return false;
-		} 
-	} else {
+		}
+	}
+	else {
 		OutputDebugStringW(L"[WARNING] - jpeg decompressor has been inited, skip.");
 	}
 
@@ -111,7 +113,8 @@ bool RTMPStreamer::init_av_utils(int width, int height, const char* url, long bi
 	try {
 		encoder = new Encoder(width, height, url, bitrate);
 		av_utils_inited = true;
-	} catch (AVException e) {
+	}
+	catch (AVException e) {
 		av_utils_inited = false;
 		return false;
 	}
@@ -145,7 +148,7 @@ Encoder::Encoder(int width, int height, const char* url, long bitrate) {
 	start_time = av_gettime();
 
 	int err = 0;
-	
+
 	AVCodec*			codec = nullptr;
 	AVDictionary*		fmt_opts = nullptr;
 	AVOutputFormat*		fmt = nullptr;
@@ -163,15 +166,15 @@ Encoder::Encoder(int width, int height, const char* url, long bitrate) {
 		width, height,
 		OUTPUT_PIX_FMT,
 		SWS_BILINEAR, nullptr, nullptr, nullptr);
-	
+
 	// alloc a av format context
 	this->fmt_ctx = avformat_alloc_context();
 	if (this->fmt_ctx == nullptr) {
 		throw AVException(ENOMEM, "can not alloc av format context");
 	}
-	
+
 	//init encoding format
-	avformat_alloc_output_context2(&fmt_ctx, NULL, "flv", url); 
+	avformat_alloc_output_context2(&fmt_ctx, NULL, "flv", url);
 	if (!fmt_ctx) {
 		throw AVException(ENOMEM, "can not open output format context.");
 	}
@@ -180,16 +183,16 @@ Encoder::Encoder(int width, int height, const char* url, long bitrate) {
 		throw AVException(ENOMEM, "can not get the output format.");
 	}
 
-	
+
 	// set format header infos
 	snprintf(fmt_ctx->filename, sizeof(fmt_ctx->filename), "%s", url);
-	
+
 	// set format's privater options, to be passed to avformat_write_header()
 	err = av_dict_set(&fmt_opts, "movflags", "faststart", 0);
 	if (err < 0) {
 		std::cerr << "Error : " << AVException(err, "av_dict_set movflags").what() << std::endl;
 	}
-	
+
 	// default brand is "isom", which fails on some devices
 	av_dict_set(&fmt_opts, "brand", "mp42", 0);
 	if (err < 0) {
@@ -213,17 +216,17 @@ Encoder::Encoder(int width, int height, const char* url, long bitrate) {
 	// set codec_ctx to stream's codec structure
 	codec_ctx = st->codec;
 
-	
+
 	// set sample parameters
-	codec_ctx->sample_fmt	= codec->sample_fmts ? codec->sample_fmts[0] : AV_SAMPLE_FMT_S16;
-	codec_ctx->width		= width;
-	codec_ctx->height		= height;
-	codec_ctx->bit_rate		= bitrate;
-	codec_ctx->time_base	= st->time_base;
-	codec_ctx->pix_fmt		= OUTPUT_PIX_FMT;
-	
+	codec_ctx->sample_fmt = codec->sample_fmts ? codec->sample_fmts[0] : AV_SAMPLE_FMT_S16;
+	codec_ctx->width = width;
+	codec_ctx->height = height;
+	codec_ctx->bit_rate = bitrate;
+	codec_ctx->time_base = st->time_base;
+	codec_ctx->pix_fmt = OUTPUT_PIX_FMT;
+
 	//H.264 specific options
-	codec_ctx->gop_size = 5; 
+	codec_ctx->gop_size = 5;
 	codec_ctx->level = 31;
 	err = av_opt_set(codec_ctx->priv_data, "crf", "12", 0);
 	if (err < 0) {
@@ -237,7 +240,7 @@ Encoder::Encoder(int width, int height, const char* url, long bitrate) {
 	if (err < 0) {
 		std::cerr << "Error : " << AVException(err, "av_opt_set preset").what() << std::endl;
 	}
-	
+
 	// disable b-pyramid. support ios player
 	err = av_opt_set(codec_ctx->priv_data, "b-pyramid", "0", 0);
 	if (err < 0) {
@@ -261,7 +264,7 @@ Encoder::Encoder(int width, int height, const char* url, long bitrate) {
 			throw AVException(ret, "can not open the url.");
 		}
 	}
-	
+
 	// write file header if necessary
 	err = avformat_write_header(fmt_ctx, &fmt_opts);
 	if (err < 0) {
@@ -270,7 +273,7 @@ Encoder::Encoder(int width, int height, const char* url, long bitrate) {
 
 	// init a frame
 	frame_yuv420p = av_frame_alloc();
-	
+
 	// link a buffer to the frame
 	int numBytes = avpicture_get_size(OUTPUT_PIX_FMT, width, height);
 	uint8_t* yuv_buffer = static_cast<uint8_t*>(av_malloc(numBytes * sizeof(uint8_t)));
@@ -280,7 +283,7 @@ Encoder::Encoder(int width, int height, const char* url, long bitrate) {
 Encoder::~Encoder() {
 	int err;
 	std::cout << "cleaning Encoder" << std::endl;
-	
+
 	// flush pending packets
 	while ((err = write(static_cast<AVFrame*>(nullptr))) == 1) {};
 	if (err < 0) {
@@ -289,7 +292,7 @@ Encoder::~Encoder() {
 
 	// write file trailer before exit
 	av_write_trailer(this->fmt_ctx);
-	
+
 	// close file
 	avio_close(fmt_ctx->pb);
 
@@ -299,7 +302,7 @@ Encoder::~Encoder() {
 	// close codec context
 	avcodec_flush_buffers(codec_ctx);
 	avcodec_free_context(&codec_ctx);
-	
+
 	// clean the frame
 	av_frame_free(&frame_yuv420p);
 
@@ -316,7 +319,7 @@ int Encoder::write(AVFrame* frame) {
 	av_init_packet(&pkt);
 
 	//Set frame pts, monotonically increasing, starting from 0
-	if (frame != NULL) frame->pts = pts ++; 
+	if (frame != NULL) frame->pts = pts++;
 	err = avcodec_encode_video2(this->codec_ctx, &pkt, frame, &got_output);
 	if (err < 0) {
 		std::cout << AVException(err, "encode frame").what() << std::endl;
@@ -336,11 +339,11 @@ int Encoder::write(AVFrame* frame) {
 		AVRational time_base = st->time_base;
 		AVRational time_base_q = { 1, AV_TIME_BASE };
 		int64_t pts_gap = av_rescale_q(1, time_base, time_base_q) * av_q2d(this->codec_ctx->time_base);
-	
+
 		// write pts
 		pkt.pts = (double)(frame_index * pts_gap);
 		pkt.dts = pkt.pts;
-		
+
 		int64_t pts_time = av_rescale_q(pkt.dts, time_base, time_base_q);
 		int64_t now_time = av_gettime() - start_time;
 
@@ -348,25 +351,27 @@ int Encoder::write(AVFrame* frame) {
 		if (pts_time > now_time) {
 			// wait (slow down, will result in accumulated latency)
 			// av_usleep(pts_time - now_time);
-		} else if (pts_time < now_time) {
+		}
+		else if (pts_time < now_time) {
 			// jump a frame (speed up)
-			frame_index ++;
-			frame->pts ++;
+			frame_index++;
+			frame->pts++;
 			pkt.pts += pts_gap;
 			pkt.dts += pts_gap;
 		}
-		
+
 		// write_frame will take care of freeing the packet.
 		err = av_interleaved_write_frame(this->fmt_ctx, &pkt);
 		frame_index++;
-		
-end:	av_free_packet(&pkt);
+
+	end:	av_free_packet(&pkt);
 		if (err < 0) {
 			std::cout << AVException(err, "write frame").what() << std::endl;
 			return err;
 		}
 		return 1;
-	} else {
+	}
+	else {
 		return 0;
 	}
 }
@@ -374,7 +379,7 @@ end:	av_free_packet(&pkt);
 AVFrame* Encoder::write_frame(unsigned char* buffer, int w, int h) {
 	uint8_t* inData[1] = { buffer };
 	int      inLinesize[1] = { 3 * w };
-	int h_slice = sws_scale(sws_ctx, inData, 
+	int h_slice = sws_scale(sws_ctx, inData,
 		inLinesize, 0, h,
 		frame_yuv420p->data, frame_yuv420p->linesize);
 	return frame_yuv420p;

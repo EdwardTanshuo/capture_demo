@@ -1,22 +1,7 @@
-/******************************************************************************
-*                                                                             *
-*   PROJECT : EOS Digital Software Development Kit EDSDK                      *
-*      NAME : CameraControl.h	                                              *
-*                                                                             *
-*   Description: This is the Sample code to show the usage of EDSDK.          *
-*                                                                             *
-*                                                                             *
-*******************************************************************************
-*                                                                             *
-*   Written and developed by Camera Design Dept.53                            *
-*   Copyright Canon Inc. 2006-2008 All Rights Reserved                        *
-*                                                                             *
-*******************************************************************************/
-
 #pragma once
 
 #ifndef __AFXWIN_H__
-	#error Please include 'Stdafx.h' before including this file in PCH. 
+#error Please include 'Stdafx.h' before including this file in PCH. 
 #endif
 
 #include "resource.h"
@@ -30,30 +15,29 @@
 // CCameraControlApp:
 // CCameraControlApp dialog used for App About
 
-class CCameraControlApp : public CWinApp
-{
+class CCameraControlApp : public CWinApp {
 public:
 	CCameraControlApp();
 
 	Displayer				_displayer;
 	RTMPPusher				_pusher;
 
-// Overrides
-	public:
+	// Overrides
+public:
 	virtual BOOL InitInstance();
 
 	CameraController*		_controller;
 
 	bool	isSDKLoaded = false;
-	bool	has_stated	= false;
+	bool	has_stated = false;
 
 	friend CameraController*	getController();
 
-// Implementation
+	// Implementation
 
 	DECLARE_MESSAGE_MAP()
 };
 
-inline CameraController* getCameraController() {return static_cast<CCameraControlApp*>(AfxGetApp())->_controller;}
+inline CameraController* getCameraController() { return static_cast<CCameraControlApp*>(AfxGetApp())->_controller; }
 
 extern CCameraControlApp theApp;

@@ -1,18 +1,3 @@
-/******************************************************************************
-*                                                                             *
-*   PROJECT : EOS Digital Software Development Kit EDSDK                      *
-*      NAME : CameraControlDlg.h                                              *
-*                                                                             *
-*   Description: This is the Sample code to show the usage of EDSDK.          *
-*                                                                             *
-*                                                                             *
-*******************************************************************************
-*                                                                             *
-*   Written and developed by Camera Design Dept.53                            *
-*   Copyright Canon Inc. 2006-2008 All Rights Reserved                        *
-*                                                                             *
-*******************************************************************************/
-
 #pragma once
 
 #include <map>
@@ -27,10 +12,9 @@
 
 
 // CCameraControlDlg Dialog
-class CCameraControlDlg : public CDialog, public ActionSource, public Observer
-{
-	
-// Construction
+class CCameraControlDlg : public CDialog, public ActionSource, public Observer {
+
+	// Construction
 private:
 	void setupListener(ActionListener* listener);
 	void setupObserver(Observable* ob);
@@ -38,7 +22,7 @@ private:
 
 public:
 	CCameraControlDlg(CWnd* pParent = NULL);	// standard constructor
-	void setCameraController(CameraController* controller){_controller = controller;}
+	void setCameraController(CameraController* controller) { _controller = controller; }
 
 
 public:
@@ -47,10 +31,10 @@ public:
 
 	//Dialog data
 	enum { IDD = IDD_CAMERACONTROL_DIALOG };
-	
+
 	CActionButton	_btnStartEVF;
 	CActionButton	_btnEndEVF;
-	
+
 	Displayer		_displayer;
 	RTMPPusher      _pusher;
 
@@ -59,8 +43,8 @@ public:
 
 	int		init_camera();
 	void	release_camera();
-	
-	protected:
+
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
 
 
@@ -75,7 +59,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 protected:
-	CameraController* _controller;
+	CameraController * _controller;
 
 public:
 	afx_msg void OnClose();
