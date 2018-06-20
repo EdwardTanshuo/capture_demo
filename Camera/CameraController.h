@@ -26,23 +26,36 @@
 #include "GetPropertyCommand.h"
 #include "DoEvfAFCommand.h"
 
+class RunControllDelegate {
+public:
+	virtual bool connectCamera		(void) = 0;
+	virtual bool disconnectCamera	(void) = 0;
+	virtual bool startStreaming		(void) = 0;
+	virtual bool stopStreaming		(void) = 0;
+};
+
 class CameraController : public ActionListener {
 
 protected:
 	// Camera model
 	CameraModel * _model;
 
+	// Run control delegate
+	RunControllDelegate* _delegate;
+
 	// Command processing
 	Processor _processor;
 
 public:
 	// Constructor
-	CameraController() : _model() {}
+	CameraController() : _model(nullptr), _delegate(nullptr) {}
 
 	// Destoracta
 	virtual ~CameraController() {}
 
 	void setCameraModel(CameraModel* model) { _model = model; }
+
+	void setDelegate(RunControllDelegate* dp) { _delegate = dp; }
 
 	//Execution beginning
 	void run() {
@@ -143,11 +156,14 @@ public:
 
 
 
-		if (command == "startEVF") {
-			StoreAsync(new StartEvfCommand(_model));
+		if (command == "start") {
+			int ret = _delegate->connectCamera();
+			if (ret) {
+				StoreAsync(new StartEvfCommand(_model));
+			}
 		}
 
-		if (command == "endEVF") {
+		if (command == "end") {
 			StoreAsync(new EndEvfCommand(_model));
 		}
 

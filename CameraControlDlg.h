@@ -12,7 +12,7 @@
 
 
 // CCameraControlDlg Dialog
-class CCameraControlDlg : public CDialog, public ActionSource, public Observer {
+class CCameraControlDlg : public CDialog, public ActionSource, public Observer, public RunControllDelegate {
 
 	// Construction
 private:
@@ -28,6 +28,12 @@ public:
 public:
 	// Observer 
 	virtual void update(Observable* from, CameraEvent *e);
+
+	// Delegate
+	virtual bool connectCamera(void);
+	virtual bool disconnectCamera(void);
+	virtual bool startStreaming(void);
+	virtual bool stopStreaming(void);
 
 	//Dialog data
 	enum { IDD = IDD_CAMERACONTROL_DIALOG };
@@ -45,7 +51,7 @@ public:
 	void	release_camera();
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
+	virtual void DoDataExchange(CDataExchange* pDX);
 
 
 // Implementation

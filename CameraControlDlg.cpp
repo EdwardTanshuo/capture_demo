@@ -198,11 +198,10 @@ BOOL CCameraControlDlg::OnInitDialog() {
 	_model = nullptr;
 
 	setupListener(_controller);
-	
+	_controller->setDelegate(this);
+
 	//Execute controller
 	_controller->run();
-	int ret = init_camera();
-	_controller->start();
 	
 	// A set value of the camera is acquired. 
 	// The value to which the camera can be set is acquired. 
@@ -212,9 +211,9 @@ BOOL CCameraControlDlg::OnInitDialog() {
 
 void CCameraControlDlg::setupListener(ActionListener* listener) {
 	addActionListener(listener);
-	_btnStartEVF.setActionCommand("startEVF");
+	_btnStartEVF.setActionCommand("start");
 	_btnStartEVF.addActionListener(listener);
-	_btnEndEVF.setActionCommand("endEVF");
+	_btnEndEVF.setActionCommand("stop");
 	_btnEndEVF.addActionListener(listener);
 	_displayer.setActionCommand("downloadEVF");
 	_displayer.addActionListener(listener);
@@ -266,5 +265,25 @@ LRESULT CCameraControlDlg::OnDownloadComplete(WPARAM wParam, LPARAM lParam) {
 
 LRESULT CCameraControlDlg::OnProgressReport(WPARAM wParam, LPARAM lParam) {
 	return 0;
+}
+
+
+// Run Control Delegate
+bool CCameraControlDlg::connectCamera(void) {
+	int ret = init_camera();
+	_controller->start();
+	return true;
+}
+
+bool CCameraControlDlg::disconnectCamera(void) {
+	return true;
+}
+
+bool CCameraControlDlg::startStreaming(void) {
+	return true;
+}
+
+bool CCameraControlDlg::stopStreaming(void) {
+	return true;
 }
 
