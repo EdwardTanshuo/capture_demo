@@ -201,7 +201,9 @@ BOOL CCameraControlDlg::OnInitDialog() {
 	
 	//Execute controller
 	_controller->run();
+	int ret = init_camera();
 	_controller->start();
+	
 	// A set value of the camera is acquired. 
 	// The value to which the camera can be set is acquired. 
 

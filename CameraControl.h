@@ -42,19 +42,12 @@ public:
 	public:
 	virtual BOOL InitInstance();
 
-	int		init_camera();
-	void	release_camera();
-
-	CameraModel*			_model;
-	EdsCameraRef			_camera;
-
 	CameraController*		_controller;
 
 	bool	isSDKLoaded = false;
 	bool	has_stated	= false;
 
 	friend CameraController*	getController();
-	friend CameraModel*			getModel();
 
 // Implementation
 
@@ -62,6 +55,5 @@ public:
 };
 
 inline CameraController* getCameraController() {return static_cast<CCameraControlApp*>(AfxGetApp())->_controller;}
-inline CameraModel* getCameraModel() {return static_cast<CCameraControlApp*>(AfxGetApp())->_model;}
 
 extern CCameraControlApp theApp;
