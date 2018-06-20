@@ -17,6 +17,10 @@ public:
 	RTMPPusher();
 	virtual ~RTMPPusher();
 
+	// Actions
+	bool startStreaming(const char* url);
+	void stopStreaming();
+
 	//observer
 	virtual void update(Observable* from, CameraEvent *e);
 

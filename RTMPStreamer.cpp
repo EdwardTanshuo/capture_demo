@@ -63,6 +63,11 @@ bool RTMPStreamer::init_componets() {
 	return init_componets(DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_URL, DEFAULT_RATE);
 }
 
+bool RTMPStreamer::init_componets(const char* url) {
+	return init_componets(DEFAULT_WIDTH, DEFAULT_HEIGHT, url, DEFAULT_RATE);
+}
+
+
 bool RTMPStreamer::init_componets(int w, int h, const char* url, long bitrate) {
 	if (!av_utils_inited) {
 		bool result = init_av_utils(w, h, url, bitrate);
@@ -90,9 +95,10 @@ bool RTMPStreamer::init_componets(int w, int h, const char* url, long bitrate) {
 // destroy components
 void RTMPStreamer::destroy_componets() {
 	if (av_utils_inited) {
-		delete encoder;
-		encoder = nullptr;
-		av_utils_inited = false;
+		destroy_av_utils();
+	}
+	if (jpeg_decompress_inited) {
+		destroy_jpeg_decompressor();
 	}
 }
 
@@ -123,6 +129,8 @@ bool RTMPStreamer::init_av_utils(int width, int height, const char* url, long bi
 }
 
 void RTMPStreamer::destroy_av_utils() {
+	delete encoder;
+	encoder = nullptr;
 	av_utils_inited = false;
 }
 

@@ -179,8 +179,8 @@ CCameraControlDlg::CCameraControlDlg(CWnd* pParent)
 void CCameraControlDlg::DoDataExchange(CDataExchange* pDX) {
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_PICT, _displayer);
-	DDX_Control(pDX, IDC_BUTTON2, _btnStartEVF);
-	DDX_Control(pDX, IDC_BUTTON3, _btnEndEVF);
+	DDX_Control(pDX, IDC_BUTTON2, _btnConnect);
+	DDX_Control(pDX, IDC_BUTTON3, _btnStop);
 }
 
 BEGIN_MESSAGE_MAP(CCameraControlDlg, CDialog)
@@ -211,10 +211,10 @@ BOOL CCameraControlDlg::OnInitDialog() {
 
 void CCameraControlDlg::setupListener(ActionListener* listener) {
 	addActionListener(listener);
-	_btnStartEVF.setActionCommand("start");
-	_btnStartEVF.addActionListener(listener);
-	_btnEndEVF.setActionCommand("stop");
-	_btnEndEVF.addActionListener(listener);
+	_btnConnect.setActionCommand("start");
+	_btnConnect.addActionListener(listener);
+	_btnStop.setActionCommand("stop");
+	_btnStop.addActionListener(listener);
 	_displayer.setActionCommand("downloadEVF");
 	_displayer.addActionListener(listener);
 	_pusher.setActionCommand("downloadEVF");
@@ -267,6 +267,12 @@ LRESULT CCameraControlDlg::OnProgressReport(WPARAM wParam, LPARAM lParam) {
 	return 0;
 }
 
+// update status
+void CCameraControlDlg::updateStatus(char* status) {
+	CWnd *label = GetDlgItem(IDC_TEXT1);
+	label->SetWindowText(status);
+
+}
 
 // Run Control Delegate
 bool CCameraControlDlg::connectCamera(void) {

@@ -10,13 +10,20 @@ IMPLEMENT_DYNAMIC(RTMPPusher, CStatic)
 RTMPPusher::RTMPPusher() {
 	active = FALSE;
 	streamer = RTMPStreamer();
-	bool ret = streamer.init_componets();
 }
 
 RTMPPusher::~RTMPPusher() {
 
 }
 
+// RTMPPusher Actions
+bool RTMPPusher::startStreaming(const char* url) {
+	return streamer.init_componets(url);
+}
+
+void RTMPPusher::stopStreaming() {
+	streamer.destroy_componets();
+}
 
 // RTMPPusher messge handler
 

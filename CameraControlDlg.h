@@ -10,7 +10,6 @@
 
 #include "ActionButton.h"
 
-
 // CCameraControlDlg Dialog
 class CCameraControlDlg : public CDialog, public ActionSource, public Observer, public RunControllDelegate {
 
@@ -19,6 +18,8 @@ private:
 	void setupListener(ActionListener* listener);
 	void setupObserver(Observable* ob);
 	void changeEnableWindow();
+
+	void updateStatus(char* status);
 
 public:
 	CCameraControlDlg(CWnd* pParent = NULL);	// standard constructor
@@ -38,8 +39,8 @@ public:
 	//Dialog data
 	enum { IDD = IDD_CAMERACONTROL_DIALOG };
 
-	CActionButton	_btnStartEVF;
-	CActionButton	_btnEndEVF;
+	CActionButton	_btnConnect;
+	CActionButton	_btnStop;
 
 	Displayer		_displayer;
 	RTMPPusher      _pusher;

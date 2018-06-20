@@ -21,6 +21,7 @@ public:
 
 	// init components
 	bool init_componets();
+	bool init_componets(const char* url);
 	bool init_componets(int w, int h, const char* url, long bitrate);
 	// destroy components
 	void destroy_componets();
