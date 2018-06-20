@@ -22,31 +22,30 @@
 #include "Synchronized.h"
 #include "Command.h"
 
-class Processor : public Thread 
-{
+class Processor : public Thread {
 
 protected:
-    // Whether it is executing it or not?
+	// Whether it is executing it or not?
 	bool _running;
 	// Que
 	std::deque<Command*>  _queue;
 
 	// Command when ending
 	Command*	_closeCommand;
-		
+
 	// Synchronized Object
-    Synchronized _syncObject;
+	Synchronized _syncObject;
 
 
 public:
 	// Constructor  
-	Processor(): _running(false), _closeCommand(0){ }	
+	Processor() : _running(false), _closeCommand(0) {}
 
 	// Destoracta
-	virtual ~Processor(){clear();}
+	virtual ~Processor() { clear(); }
 
 	// Set command when ending
-	void setCloseCommand(Command* closeCommand){_closeCommand = closeCommand;}
+	void setCloseCommand(Command* closeCommand) { _closeCommand = closeCommand; }
 
 
 	/*
@@ -55,36 +54,32 @@ public:
 		_syncObject.lock();
 		_queue.push_back(command);
 		_syncObject.unlock();
-		resume();	
+		resume();
 	}*/
 
-	
-	void enqueue(Command* command)
-	{
+
+	void enqueue(Command* command) {
 		_syncObject.lock();
 		_queue.push_back(command);
-		_syncObject.notify();	
+		_syncObject.notify();
 		_syncObject.unlock();
 	}
 
 
 
-	void stop()
-	{
+	void stop() {
 		_syncObject.lock();
 		_running = false;
 		_syncObject.unlock();
 		//resume();
-	}  
+	}
 
 
-	void clear() 
-	{
+	void clear() {
 		_syncObject.lock();
 
 		std::deque<Command*>::iterator it = _queue.begin();
-		while (it != _queue.end())
-		{
+		while (it != _queue.end()) {
 			delete (*it);
 			++it;
 		}
@@ -95,24 +90,20 @@ public:
 
 
 public:
-	virtual void run()
-	{
+	virtual void run() {
 		//When using the SDK from another thread in Windows, 
 		// you must initialize the COM library by calling CoInitialize 
-		CoInitializeEx(nullptr, COINIT_MULTITHREADED );
+		CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
 		_running = true;
-		while (_running)
-		{
+		while (_running) {
 			Sleep(1);
 
 			Command* command = take();
-			if(command != nullptr && command->getCameraModel() != nullptr)
-			{
+			if (command != nullptr && command->getCameraModel() != nullptr) {
 				bool complete = command->execute();
-				
-				if(complete == false)
-				{
+
+				if (complete == false) {
 					//If commands that were issued fail ( because of DeviceBusy or other reasons )
 					// and retry is required , note that some cameras may become unstable if multiple 
 					// commands are issued in succession without an intervening interval.
@@ -120,19 +111,17 @@ public:
 					Sleep(500);
 					enqueue(command);
 				}
-				else
-				{
+				else {
 					delete command;
 				}
 			}
 		}
-		
+
 		// Clear que
 		clear();
 
 		// Command of end
-		if(_closeCommand != NULL)
-		{
+		if (_closeCommand != NULL) {
 			_closeCommand->execute();
 			delete _closeCommand;
 			_closeCommand = NULL;
@@ -149,16 +138,16 @@ protected:
 	/*
 	Command* take()
 	{
-	
+
 		Command* command = NULL;
-		
+
 		// Que stands by between emptiness.
 		while (true)
 		{
 			_syncObject.lock();
 			bool empty = _queue.empty();
 			_syncObject.unlock();
-			
+
 			if(empty == false)break;
 
 			suspend();
@@ -168,33 +157,30 @@ protected:
 				return NULL;
 			}
 		}
-	
+
 		_syncObject.lock();
-		
+
 		command = _queue.front();
 		_queue.pop_front();
 
 		_syncObject.unlock();
-		
+
 		return command;
 	}*/
 
-	
- 	Command* take()
-	{
-	
+
+	Command* take() {
+
 		Command* command = NULL;
-	
+
 		_syncObject.lock();
 
 		// Que stands by between emptiness.
-		while (_queue.empty() && _running)
-		{
+		while (_queue.empty() && _running) {
 			_syncObject.wait(10);
 		}
-	
-		if (_running)
-		{
+
+		if (_running) {
 			command = _queue.front();
 			_queue.pop_front();
 		}
@@ -203,14 +189,13 @@ protected:
 
 		return command;
 	}
- 
 
-	bool isEmpty()
-	{
+
+	bool isEmpty() {
 		_syncObject.lock();
 		bool ret = _queue.empty();
 		_syncObject.unlock();
-		
+
 		return ret;
 	}
 
