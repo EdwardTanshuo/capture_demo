@@ -45,7 +45,7 @@ public:
 	Displayer		_displayer;
 	RTMPPusher      _pusher;
 
-	CameraModel*	_model;
+	CameraModel*	_model = nullptr;
 	EdsCameraRef	_camera;
 
 	int		init_camera();

@@ -26,11 +26,15 @@ protected:
 
 public:
 	Command(CameraModel *model) : _model(model) {
-		_model->retain();
+		if (_model != nullptr) {
+			_model->retain();
+		}
 	}
 
 	virtual ~Command() {
-		_model->release();
+		if (_model != nullptr) {
+			_model->release();
+		}
 	}
 
 	CameraModel* getCameraModel(){

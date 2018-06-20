@@ -48,6 +48,11 @@ static CameraModel* cameraModelFactory(EdsCameraRef camera, EdsDeviceInfo device
 
 
 int CCameraControlDlg::init_camera() {
+	if (_model != nullptr) {
+		_model->release();
+		_model = nullptr;
+	}
+
 	EdsError	 err = EDS_ERR_OK;
 	EdsCameraListRef cameraList = nullptr;
 	EdsUInt32	 count = 0;
@@ -280,7 +285,8 @@ void CCameraControlDlg::updateStatus(char* status) {
 // Run Control Delegate
 bool CCameraControlDlg::connectCamera(void) {
 	int ret = init_camera();
-	_controller->start();
+	if (ret == EDS_ERR_OK)
+		_controller->start();
 	return true;
 }
 

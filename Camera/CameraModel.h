@@ -50,7 +50,9 @@ public:
 		_syncObject.lock();
 		ref_counter--;
 		if (ref_counter == 0) {
+			_syncObject.unlock();
 			delete this;
+			return;
 		}
 		_syncObject.unlock();
 	};
