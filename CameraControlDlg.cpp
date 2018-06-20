@@ -1,18 +1,3 @@
-/******************************************************************************
-*                                                                             *
-*   PROJECT : EOS Digital Software Development Kit EDSDK                      *
-*      NAME : CameraControlDlg.cpp                                            *
-*                                                                             *
-*   Description: This is the Sample code to show the usage of EDSDK.          *
-*                                                                             *
-*                                                                             *
-*******************************************************************************
-*                                                                             *
-*   Written and developed by Camera Design Dept.53                            *
-*   Copyright Canon Inc. 2006-2008 All Rights Reserved                        *
-*                                                                             *
-*******************************************************************************/
-
 #include "stdafx.h"
 #include <map>
 
@@ -95,6 +80,7 @@ int CCameraControlDlg::init_camera() {
 		if (_model == nullptr) {
 			err = EDS_ERR_DEVICE_NOT_FOUND;
 		}
+		// retatin the smart pointer or it will be deleted soon in the next cycle of runloop.
 		_model->retain();
 	}
 	else {
@@ -208,7 +194,7 @@ BOOL CCameraControlDlg::OnInitDialog() {
 
 	//Execute controller
 	_controller->run();
-	
+
 	// A set value of the camera is acquired. 
 	// The value to which the camera can be set is acquired. 
 
@@ -285,6 +271,8 @@ void CCameraControlDlg::updateStatus(char* status) {
 // Run Control Delegate
 bool CCameraControlDlg::connectCamera(void) {
 	int ret = init_camera();
+	_controller->stop();
+	Sleep(500);
 	if (ret == EDS_ERR_OK)
 		_controller->start();
 	return true;
@@ -292,7 +280,7 @@ bool CCameraControlDlg::connectCamera(void) {
 
 bool CCameraControlDlg::disconnectCamera(void) {
 	release_camera();
-	
+
 	return true;
 }
 

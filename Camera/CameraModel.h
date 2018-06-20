@@ -49,7 +49,7 @@ public:
 	void release() {
 		_syncObject.lock();
 		ref_counter--;
-		if (ref_counter == 0) {
+		if (ref_counter <= 0) {
 			_syncObject.unlock();
 			delete this;
 			return;

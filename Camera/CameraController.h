@@ -71,6 +71,9 @@ public:
 	}
 
 	void stop() {
+		// end evf 
+		StoreAsync(new EndEvfCommand(_model));
+
 		//The communication with the camera end
 		StoreAsync(new CloseSessionCommand(_model));
 	}
