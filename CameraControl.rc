@@ -27,29 +27,29 @@ LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE 
+1 TEXTINCLUDE
 BEGIN
-    "resource.h\0"
+"resource.h\0"
 END
 
-2 TEXTINCLUDE 
+2 TEXTINCLUDE
 BEGIN
-    "#include ""afxres.h""\r\n"
-    "\0"
+"#include ""afxres.h""\r\n"
+"\0"
 END
 
-3 TEXTINCLUDE 
+3 TEXTINCLUDE
 BEGIN
-    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
-    "#define _AFX_NO_OLE_RESOURCES\r\n"
-    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
-    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
-    "\r\n"
-    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)\r\n"
-    "LANGUAGE 17, 1\r\n"
-    "#pragma code_page(932)\r\n"
-    "#include ""afxres.rc#endif\r\n"
-    "\0"
+"#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+"#define _AFX_NO_OLE_RESOURCES\r\n"
+"#define _AFX_NO_TRACKER_RESOURCES\r\n"
+"#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+"\r\n"
+"#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)\r\n"
+"LANGUAGE 17, 1\r\n"
+"#pragma code_page(932)\r\n"
+"#include ""afxres.rc#endif\r\n"
+"\0"
 END
 
 #endif    // APSTUDIO_INVOKED
@@ -81,20 +81,20 @@ IDR_MAINFRAME           ICON                    "res\\CameraControl.ico"
 // Dialog
 //
 
-IDD_CAMERACONTROL_DIALOG DIALOGEX 0, 0, 454, 240
+IDD_CAMERACONTROL_DIALOG DIALOGEX 0, 0, 427, 271
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_TOOLWINDOW | WS_EX_APPWINDOW
-CAPTION "CameraControl"
+CAPTION "Label Capture"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    PUSHBUTTON      "Take Picture",IDC_BUTTON1,133,7,50,20,BS_MULTILINE
-	EDITTEXT        IDC_EDIT1, 7, 219, 176, 14, ES_AUTOHSCROLL | ES_READONLY
-    LTEXT           "Device",IDC_STATIC,7,46,10,8
-    LTEXT           "Straming",IDC_STATIC,7,135,51,11
-    LTEXT           "Server:",IDC_STATIC,7,162,53,11
-    PUSHBUTTON      "Start",IDC_BUTTON2,213,7,50,14
-    PUSHBUTTON      "End",IDC_BUTTON3,277,7,50,14
-    CONTROL         "",IDC_PICT,"Static",SS_BLACKFRAME,216,97,231,136
+PUSHBUTTON      "Take Picture", IDC_BUTTON1, 353, 14, 50, 14
+PUSHBUTTON      "Start", IDC_BUTTON2, 233, 14, 50, 14
+PUSHBUTTON      "End", IDC_BUTTON3, 293, 14, 50, 14
+EDITTEXT        IDC_EDIT1, 45, 15, 176, 14, ES_AUTOHSCROLL | ES_READONLY
+LTEXT           "Device", IDC_STATIC, 15, 244, 51, 8
+LTEXT           "Straming", IDC_STATIC, 15, 220, 52, 10
+LTEXT           "Server:", IDC_STATIC, 15, 233, 53, 11
+CONTROL         "", IDC_PICT, "Static", SS_BLACKFRAME, 80, 38, 270, 180
 END
 
 
@@ -104,36 +104,36 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,0,1
- PRODUCTVERSION 1,0,0,1
- FILEFLAGSMASK 0x3fL
+FILEVERSION 1, 0, 0, 1
+PRODUCTVERSION 1, 0, 0, 1
+FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
- FILEFLAGS 0x1L
+FILEFLAGS 0x1L
 #else
- FILEFLAGS 0x0L
+FILEFLAGS 0x0L
 #endif
- FILEOS 0x4L
- FILETYPE 0x1L
- FILESUBTYPE 0x0L
+FILEOS 0x4L
+FILETYPE 0x1L
+FILESUBTYPE 0x0L
 BEGIN
-    BLOCK "StringFileInfo"
-    BEGIN
-        BLOCK "040904e4"
-        BEGIN
-            VALUE "CompanyName", "TODO: <Company name>"
-            VALUE "FileDescription", "TODO: <File description>"
-            VALUE "FileVersion", "1.0.0.1"
-            VALUE "InternalName", "CameraControl.exe"
-            VALUE "LegalCopyright", "TODO: (c) <Company name>.  All rights reserved."
-            VALUE "OriginalFilename", "CameraControl.exe"
-            VALUE "ProductName", "TODO: <Product name>"
-            VALUE "ProductVersion", "1.0.0.1"
-        END
-    END
-    BLOCK "VarFileInfo"
-    BEGIN
-        VALUE "Translation", 0x409, 1252
-    END
+BLOCK "StringFileInfo"
+BEGIN
+BLOCK "040904e4"
+BEGIN
+VALUE "CompanyName", "TODO: <Company name>"
+VALUE "FileDescription", "TODO: <File description>"
+VALUE "FileVersion", "1.0.0.1"
+VALUE "InternalName", "CameraControl.exe"
+VALUE "LegalCopyright", "TODO: (c) <Company name>.  All rights reserved."
+VALUE "OriginalFilename", "CameraControl.exe"
+VALUE "ProductName", "TODO: <Product name>"
+VALUE "ProductVersion", "1.0.0.1"
+END
+END
+BLOCK "VarFileInfo"
+BEGIN
+VALUE "Translation", 0x409, 1252
+END
 END
 
 
@@ -143,15 +143,15 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO 
+GUIDELINES DESIGNINFO
 BEGIN
-    IDD_CAMERACONTROL_DIALOG, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 447
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 233
-    END
+IDD_CAMERACONTROL_DIALOG, DIALOG
+BEGIN
+LEFTMARGIN, 7
+RIGHTMARGIN, 447
+TOPMARGIN, 7
+BOTTOMMARGIN, 233
+END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -161,9 +161,9 @@ END
 // String Table
 //
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
-    IDS_ABOUTBOX            "&About CameraControl..."
+IDS_ABOUTBOX            "&About CameraControl..."
 END
 
 #endif    // âpåÍ (ïƒçë) resources
@@ -189,4 +189,3 @@ LANGUAGE 17, 1
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
-
