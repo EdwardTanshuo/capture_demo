@@ -17,6 +17,7 @@ class CCameraControlDlg : public CDialog, public ActionSource, public Observer, 
 private:
 	void setupListener(ActionListener* listener);
 	void setupObserver(Observable* ob);
+	void removeObserver(Observable* ob);
 	void changeEnableWindow();
 
 	void updateStatus(char* status);

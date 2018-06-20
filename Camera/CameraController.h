@@ -155,16 +155,15 @@ public:
 		}
 
 
-
 		if (command == "start") {
-			int ret = _delegate->connectCamera();
+			bool ret = _delegate->connectCamera();
 			if (ret) {
 				StoreAsync(new StartEvfCommand(_model));
 			}
 		}
 
 		if (command == "end") {
-			StoreAsync(new EndEvfCommand(_model));
+			bool ret = _delegate->disconnectCamera();
 		}
 
 		if (command == "downloadEVF") {

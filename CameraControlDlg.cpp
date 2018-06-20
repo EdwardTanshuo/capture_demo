@@ -153,6 +153,7 @@ end:
 
 void CCameraControlDlg::release_camera() {
 	if (_controller != nullptr) {
+		removeObserver(_model);
 		_controller->setCameraModel(nullptr);
 		_controller->stop();
 	}
@@ -213,7 +214,7 @@ void CCameraControlDlg::setupListener(ActionListener* listener) {
 	addActionListener(listener);
 	_btnConnect.setActionCommand("start");
 	_btnConnect.addActionListener(listener);
-	_btnStop.setActionCommand("stop");
+	_btnStop.setActionCommand("end");
 	_btnStop.addActionListener(listener);
 	_displayer.setActionCommand("downloadEVF");
 	_displayer.addActionListener(listener);
@@ -225,6 +226,11 @@ void CCameraControlDlg::setupListener(ActionListener* listener) {
 void CCameraControlDlg::setupObserver(Observable* ob) {
 	ob->addObserver(static_cast<Observer*>(&_displayer));
 	ob->addObserver(static_cast<Observer*>(&_pusher));
+}
+
+void CCameraControlDlg::removeObserver(Observable* ob) {
+	ob->deleteObserver(static_cast<Observer*>(&_displayer));
+	ob->deleteObserver(static_cast<Observer*>(&_pusher));
 }
 
 void CCameraControlDlg::OnClose() {
@@ -277,11 +283,16 @@ void CCameraControlDlg::updateStatus(char* status) {
 // Run Control Delegate
 bool CCameraControlDlg::connectCamera(void) {
 	int ret = init_camera();
-	_controller->start();
-	return true;
+	if (ret == EDS_ERR_OK) {
+		_controller->start();
+		return true;
+	}
+	return false;
 }
 
 bool CCameraControlDlg::disconnectCamera(void) {
+	release_camera();
+	
 	return true;
 }
 
