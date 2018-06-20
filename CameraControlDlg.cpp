@@ -123,8 +123,11 @@ int CCameraControlDlg::init_camera() {
 			goto end;
 		}
 
-		if (err == EDS_ERR_OK)
+		if (err == EDS_ERR_OK) {
+			_controller->setCameraModel(_model);
+			setupObserver(_model);
 			return err;
+		}
 	}
 
 end:
@@ -191,10 +194,11 @@ END_MESSAGE_MAP()
 
 BOOL CCameraControlDlg::OnInitDialog() {
 	CDialog::OnInitDialog();
+	_camera = nullptr;
+	_model = nullptr;
 
 	setupListener(_controller);
-	setupObserver(getCameraModel());
-
+	
 	//Execute controller
 	_controller->run();
 	_controller->start();
