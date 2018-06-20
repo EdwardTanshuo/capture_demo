@@ -29,7 +29,7 @@
 #endif
 
 
-CameraModel* cameraModelFactory(EdsCameraRef camera, EdsDeviceInfo deviceInfo);
+static CameraModel* cameraModelFactory(EdsCameraRef camera, EdsDeviceInfo deviceInfo);
 
 // CCameraControlApp
 
@@ -139,12 +139,6 @@ end:
 		_camera = nullptr;
 	}
 
-	// termination of sdk
-	if (isSDKLoaded) {
-		EdsTerminateSDK();
-		isSDKLoaded = false;
-	}
-
 	if (_model != nullptr) {
 		delete _model;
 		_model = nullptr;
@@ -214,7 +208,7 @@ BOOL CCameraControlApp::InitInstance() {
 }
 
 
-CameraModel* cameraModelFactory(EdsCameraRef camera, EdsDeviceInfo deviceInfo) {
+static CameraModel* cameraModelFactory(EdsCameraRef camera, EdsDeviceInfo deviceInfo) {
 	// if Legacy protocol.
 	if (deviceInfo.deviceSubType == 0) {
 		return new CameraModelLegacy(camera);

@@ -18,7 +18,7 @@
 #include <map>
 #include "Observer.h"
 #include "CameraController.h"
-
+#include "CameraModel.h"
 
 #include "Displayer.h"
 #include "RTMPPusher.h"
@@ -53,6 +53,12 @@ public:
 	
 	Displayer		_displayer;
 	RTMPPusher      _pusher;
+
+	CameraModel*	_model;
+	EdsCameraRef	_camera;
+
+	int		init_camera();
+	void	release_camera();
 	
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
