@@ -25,9 +25,17 @@ protected:
 	CameraModel* _model;
 
 public:
-	Command(CameraModel *model) : _model(model) {}
+	Command(CameraModel *model) : _model(model) {
+		_model->retain();
+	}
 
-	CameraModel* getCameraModel(){return _model;}
+	virtual ~Command() {
+		_model->release();
+	}
+
+	CameraModel* getCameraModel(){
+		return _model;
+	}
 
 	// Execute command	
 	virtual bool execute() = 0;

@@ -89,7 +89,6 @@ FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
 PUSHBUTTON      "Take Picture", IDC_BUTTON1, 353, 14, 50, 14
 PUSHBUTTON      "Connect", IDC_BUTTON2, 233, 14, 50, 14
-PUSHBUTTON      "Stop", IDC_BUTTON3, 293, 14, 50, 14
 EDITTEXT        IDC_EDIT1, 45, 15, 176, 14, ES_AUTOHSCROLL | ES_READONLY
 LTEXT           "Streaming Status:", IDC_TEXT1, 15, 220, 100, 10
 LTEXT           "Server Status:", IDC_TEXT2, 15, 234, 100, 10

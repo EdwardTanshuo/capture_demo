@@ -43,7 +43,24 @@ protected:
 	EdsPropertyDesc _ImageQualityDesc;
 	EdsPropertyDesc _evfAFModeDesc;
 
+	int ref_counter = 0;
+
 public:
+	void release() {
+		_syncObject.lock();
+		ref_counter--;
+		if (ref_counter == 0) {
+			delete this;
+		}
+		_syncObject.unlock();
+	};
+
+	void retain() {
+		_syncObject.lock();
+		ref_counter++;
+		_syncObject.unlock();
+	};
+
 	// Constructor
 	CameraModel(EdsCameraRef camera) :_lockCount(0), _camera(camera) { memset(&_focusInfo, 0, sizeof(_focusInfo)); }
 

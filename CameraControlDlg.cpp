@@ -90,6 +90,7 @@ int CCameraControlDlg::init_camera() {
 		if (_model == nullptr) {
 			err = EDS_ERR_DEVICE_NOT_FOUND;
 		}
+		_model->retain();
 	}
 	else {
 		goto end;
@@ -117,7 +118,7 @@ int CCameraControlDlg::init_camera() {
 
 		// set event handler
 		if (err == EDS_ERR_OK) {
-			err = EdsSetCameraStateEventHandler(_camera, kEdsStateEvent_All, CameraEventListener::handleStateEvent, (EdsVoid *)_controller);
+			err = EdsSetCameraStateEventHandler(_camera, kEdsStateEvent_All, CameraEventListener::handleStateEvent, (EdsVoid*)_controller);
 		}
 		else {
 			goto end;
@@ -138,7 +139,7 @@ end:
 	}
 
 	if (_model != nullptr) {
-		delete _model;
+		_model->release();
 		_model = nullptr;
 	}
 
@@ -165,7 +166,7 @@ void CCameraControlDlg::release_camera() {
 	}
 
 	if (_model != nullptr) {
-		delete _model;
+		_model->release();
 		_model = nullptr;
 	}
 
@@ -181,7 +182,6 @@ void CCameraControlDlg::DoDataExchange(CDataExchange* pDX) {
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_PICT, _displayer);
 	DDX_Control(pDX, IDC_BUTTON2, _btnConnect);
-	DDX_Control(pDX, IDC_BUTTON3, _btnStop);
 }
 
 BEGIN_MESSAGE_MAP(CCameraControlDlg, CDialog)
@@ -214,8 +214,6 @@ void CCameraControlDlg::setupListener(ActionListener* listener) {
 	addActionListener(listener);
 	_btnConnect.setActionCommand("start");
 	_btnConnect.addActionListener(listener);
-	_btnStop.setActionCommand("end");
-	_btnStop.addActionListener(listener);
 	_displayer.setActionCommand("downloadEVF");
 	_displayer.addActionListener(listener);
 	_pusher.setActionCommand("downloadEVF");
@@ -229,8 +227,7 @@ void CCameraControlDlg::setupObserver(Observable* ob) {
 }
 
 void CCameraControlDlg::removeObserver(Observable* ob) {
-	ob->deleteObserver(static_cast<Observer*>(&_displayer));
-	ob->deleteObserver(static_cast<Observer*>(&_pusher));
+	ob->deleteObservers();
 }
 
 void CCameraControlDlg::OnClose() {
@@ -283,11 +280,8 @@ void CCameraControlDlg::updateStatus(char* status) {
 // Run Control Delegate
 bool CCameraControlDlg::connectCamera(void) {
 	int ret = init_camera();
-	if (ret == EDS_ERR_OK) {
-		_controller->start();
-		return true;
-	}
-	return false;
+	_controller->start();
+	return true;
 }
 
 bool CCameraControlDlg::disconnectCamera(void) {

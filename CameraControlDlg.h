@@ -41,7 +41,6 @@ public:
 	enum { IDD = IDD_CAMERACONTROL_DIALOG };
 
 	CActionButton	_btnConnect;
-	CActionButton	_btnStop;
 
 	Displayer		_displayer;
 	RTMPPusher      _pusher;

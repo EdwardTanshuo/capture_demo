@@ -164,6 +164,8 @@ public:
 
 		if (command == "end") {
 			bool ret = _delegate->disconnectCamera();
+			StoreAsync(new EndEvfCommand(_model));
+			StoreAsync(new CloseSessionCommand(_model));
 		}
 
 		if (command == "downloadEVF") {
