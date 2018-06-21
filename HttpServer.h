@@ -1,8 +1,10 @@
 #pragma once
 
 #include <http.h>
+#include "ActionSource.h"
+#include "Thread.h"
 
-class HttpServer {
+class HttpServer: public ActionSource, public Thread {
 protected:
 	// request queue
 	HANDLE			_req_queue = nullptr;
@@ -10,6 +12,8 @@ protected:
 	HTTP_REQUEST_ID	_request_id;
 	ULONG			_url_added = 0;
 	ULONG			_request_buffer_len;
+
+	bool			_running = false;
 
 protected:
 	// poll the request queue
@@ -23,7 +27,7 @@ public:
 	ULONG add_url(PCWSTR url) throw();
 
 	// start the run proc
-	void run();
+	virtual void run();
 
 	DWORD SendHttpResponse(IN USHORT code, IN PSTR reason, IN PSTR entity);
 

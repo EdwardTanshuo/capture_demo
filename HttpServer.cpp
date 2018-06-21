@@ -151,3 +151,15 @@ DWORD HttpServer::SendHttpPostResponse() {
 	return 0;
 }
 
+// start the run proc
+void HttpServer::run() {
+	while (true) {
+		try {
+			poll();
+		}
+		catch (HttpException e) {
+			
+		}
+	}
+}
+

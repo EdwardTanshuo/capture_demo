@@ -5,7 +5,7 @@
 #include "Synchronized.h"
 #include "Command.h"
 
-class Processor : public Thread {
+class Processor: public Thread {
 
 protected:
 	// Whether it is executing it or not?
