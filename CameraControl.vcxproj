@@ -76,7 +76,7 @@
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>EDSDK.lib;jpeg.lib;turbojpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>EDSDK.lib;jpeg.lib;turbojpeg.lib;httpapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>./lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -162,6 +162,7 @@
     <ClInclude Include="Command\StartEvfCommand.h" />
     <ClInclude Include="Command\TakePictureCommand.h" />
     <ClInclude Include="Displayer.h" />
+    <ClInclude Include="HttpException.h" />
     <ClInclude Include="HttpServer.h" />
     <ClInclude Include="include\EDSDK.h" />
     <ClInclude Include="include\EDSDKErrors.h" />

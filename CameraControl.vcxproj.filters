@@ -209,6 +209,9 @@
     <ClInclude Include="HttpServer.h">
       <Filter>header\Http</Filter>
     </ClInclude>
+    <ClInclude Include="HttpException.h">
+      <Filter>header\Http</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\CameraControl.ico">

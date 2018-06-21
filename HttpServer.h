@@ -5,23 +5,31 @@
 class HttpServer {
 protected:
 	// request queue
-	HANDLE req_queue = nullptr;
-	int url_added = 0;
+	HANDLE			_req_queue = nullptr;
+	PHTTP_REQUEST	_request = nullptr;
+	HTTP_REQUEST_ID	_request_id;
+	ULONG			_url_added = 0;
+	ULONG			_request_buffer_len;
 
 protected:
 	// poll the request queue
-	DWORD poll();
+	DWORD poll() throw();
 
 public:
-	HttpServer();
+	HttpServer() throw();
 	virtual ~HttpServer();
 
 	// add url after initialized
-	ULONG add_url(const char* url);
+	ULONG add_url(PCWSTR url) throw();
 
 	// start the run proc
 	void run();
 
+	DWORD SendHttpResponse(IN USHORT code, IN PSTR reason, IN PSTR entity);
+
+	DWORD SendHttpPostResponse();
+
+protected:
 	// utils
 	void init_http_reponse(HTTP_RESPONSE* resp, USHORT status, PSTR reason) {
 		RtlZeroMemory(resp, sizeof(*resp));
