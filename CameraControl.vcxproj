@@ -119,6 +119,7 @@
     <ClCompile Include="CameraControl.cpp" />
     <ClCompile Include="CameraControlDlg.cpp" />
     <ClCompile Include="Displayer.cpp" />
+    <ClCompile Include="HttpServer.cpp" />
     <ClCompile Include="RTMPPusher.cpp" />
     <ClCompile Include="RTMPStreamer.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -161,6 +162,7 @@
     <ClInclude Include="Command\StartEvfCommand.h" />
     <ClInclude Include="Command\TakePictureCommand.h" />
     <ClInclude Include="Displayer.h" />
+    <ClInclude Include="HttpServer.h" />
     <ClInclude Include="include\EDSDK.h" />
     <ClInclude Include="include\EDSDKErrors.h" />
     <ClInclude Include="include\EDSDKTypes.h" />

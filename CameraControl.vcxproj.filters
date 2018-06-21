@@ -34,6 +34,9 @@
     <Filter Include="header\jpeg">
       <UniqueIdentifier>{2d76e2bb-18b7-4374-ae59-c9a9766b1307}</UniqueIdentifier>
     </Filter>
+    <Filter Include="header\Http">
+      <UniqueIdentifier>{efbb4615-0864-42ae-b17b-c2985c717dd1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ActionButton.cpp">
@@ -58,6 +61,9 @@
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="RTMPPusher.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="HttpServer.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -199,6 +205,9 @@
     </ClInclude>
     <ClInclude Include="RTMPPusher.h">
       <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="HttpServer.h">
+      <Filter>header\Http</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
