@@ -161,6 +161,7 @@
     <ClInclude Include="Command\SetPropertyCommand.h" />
     <ClInclude Include="Command\StartEvfCommand.h" />
     <ClInclude Include="Command\TakePictureCommand.h" />
+    <ClInclude Include="Config.h" />
     <ClInclude Include="Displayer.h" />
     <ClInclude Include="HttpException.h" />
     <ClInclude Include="HttpServer.h" />

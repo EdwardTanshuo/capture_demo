@@ -2,9 +2,10 @@
 
 #include <http.h>
 #include "ActionSource.h"
+#include "Observer.h"
 #include "Thread.h"
 
-class HttpServer: public ActionSource, public Thread {
+class HttpServer: public ActionSource, public Thread, public Observer {
 protected:
 	// request queue
 	HANDLE			_req_queue = nullptr;
@@ -28,6 +29,9 @@ public:
 
 	// start the run proc
 	virtual void run();
+
+	//observer
+	virtual void update(Observable* from, CameraEvent *e);
 
 	DWORD SendHttpResponse(IN USHORT code, IN PSTR reason, IN PSTR entity);
 

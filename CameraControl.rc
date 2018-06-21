@@ -87,12 +87,11 @@ EXSTYLE WS_EX_TOOLWINDOW | WS_EX_APPWINDOW
 CAPTION "Label Capture"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-PUSHBUTTON      "Take Picture", IDC_BUTTON1, 353, 14, 50, 14
-PUSHBUTTON      "Connect", IDC_BUTTON2, 233, 14, 50, 14
-EDITTEXT        IDC_EDIT1, 45, 15, 176, 14, ES_AUTOHSCROLL | ES_READONLY
-LTEXT           "Streaming Status:", IDC_TEXT1, 15, 220, 100, 10
-LTEXT           "Server Status:", IDC_TEXT2, 15, 234, 100, 10
-LTEXT           "Device Status", IDC_TEXT3, 15, 248, 100, 10
+PUSHBUTTON      "Connect", IDC_BUTTON2, 333, 14, 50, 14
+EDITTEXT        IDC_EDIT1, 45, 15, 276, 14, ES_AUTOHSCROLL | ES_READONLY
+LTEXT           "Streaming Status:", IDC_TEXT1, 15, 225, 1000, 10
+LTEXT           "Server Status:", IDC_TEXT2, 15, 239, 1000, 10
+LTEXT           "Device Status:", IDC_TEXT3, 15, 253, 1000, 10
 CONTROL         "", IDC_PICT, "Static", SS_BLACKFRAME, 80, 38, 270, 180
 END
 

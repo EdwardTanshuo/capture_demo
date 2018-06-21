@@ -10,6 +10,8 @@
 #include "EDSDK.h"
 #include "EDSDKTypes.h"
 
+#include "Config.h"
+
 #include "HttpException.h"
 
 #ifdef _DEBUG
@@ -20,6 +22,11 @@
 #define WM_USER_DOWNLOAD_COMPLETE		WM_APP+1
 #define WM_USER_PROGRESS_REPORT			WM_APP+2
 
+typedef enum _status_type {
+	STREAMING_STATUS = 1,
+	SERVER_STATUS = 2,
+	DEVICE_STATUS = 3
+} StatusType;
 
 // CCameraControlDlg 
 static CameraModel* cameraModelFactory(EdsCameraRef camera, EdsDeviceInfo deviceInfo) {
@@ -225,7 +232,21 @@ BOOL CCameraControlDlg::OnInitDialog() {
 
 	try {
 		_http = new HttpServer();
+
+		// add configured url
+		char url[] = HTTP_URL;
+		wchar_t wurl[200];
+		mbstowcs(wurl, url, strlen(url) + 1);
+		LPWSTR ptr = wurl;
+		_http->add_url(wurl);
+
+		// start server
 		_http->start();
+
+		// update status
+		char buffer[200];
+		sprintf(buffer, "Server Status: listen on [ %s ]", HTTP_URL);
+		updateStatus(SERVER_STATUS, buffer);
 	}
 	catch (HttpException e) {
 		::MessageBox(NULL, "Cannot setup http server", NULL, MB_OK);
@@ -310,15 +331,64 @@ LRESULT CCameraControlDlg::OnProgressReport(WPARAM wParam, LPARAM lParam) {
 }
 
 // update status
-void CCameraControlDlg::updateStatus(char* status) {
-	CWnd *label = GetDlgItem(IDC_TEXT1);
-	label->SetWindowText(status);
+void CCameraControlDlg::updateStatus(int type, const char* status) {
+	CWnd * label;
+	switch (type) {
+	case 1: 
+		label = GetDlgItem(IDC_TEXT1);
+		label->SetWindowText(status);
+		break;
+	case 2:
+		label = GetDlgItem(IDC_TEXT2);
+		label->SetWindowText(status);
+		break;
+	case 3:
+		label = GetDlgItem(IDC_TEXT3);
+		label->SetWindowText(status);
+		break;
+	}
+	
 
 }
 
 // Run Control Delegate
 bool CCameraControlDlg::connectCamera(void) {
 	int ret = init_camera();
+	switch (ret) {
+	case EDS_ERR_OK:
+		char buffer[1024];
+		sprintf(buffer, "Device Status: connected: [ %s ]", _model->getModelName());
+		updateStatus(DEVICE_STATUS, buffer);
+		break;
+	case EDS_ERR_DEVICE_NOT_FOUND:
+		updateStatus(DEVICE_STATUS, "Device Status: Device not found");
+		break;
+	case EDS_ERR_DEVICE_BUSY:
+		updateStatus(DEVICE_STATUS, "Device Status: Device busy");
+		break;
+	case EDS_ERR_DEVICE_INVALID:
+		updateStatus(DEVICE_STATUS, "Device Status: Device invalid");
+		break;
+	case EDS_ERR_DEVICE_EMERGENCY:
+		updateStatus(DEVICE_STATUS, "Device Status: Device in emergency");
+		break;
+	case EDS_ERR_DEVICE_MEMORY_FULL:
+		updateStatus(DEVICE_STATUS, "Device Status: Memory full");
+		break;
+	case EDS_ERR_DEVICE_INTERNAL_ERROR:
+		updateStatus(DEVICE_STATUS, "Device Status: Internal error");
+		break;
+
+	case EDS_ERR_DEVICE_NOT_RELEASED:
+		updateStatus(DEVICE_STATUS, "Device Status: Not released");
+		break;
+
+	case EDS_ERR_DEVICE_NOT_INSTALLED:
+		updateStatus(DEVICE_STATUS, "Device Status: Not installed");
+		break;		
+	}
+
+	// restart session 
 	_controller->stop();
 	Sleep(500);
 	if (ret == EDS_ERR_OK)
@@ -328,15 +398,26 @@ bool CCameraControlDlg::connectCamera(void) {
 
 bool CCameraControlDlg::disconnectCamera(void) {
 	release_camera();
-
+	updateStatus(DEVICE_STATUS, "Device Status: Disconnected");
 	return true;
 }
 
 bool CCameraControlDlg::startStreaming(void) {
-	return true;
+	bool ret = _pusher.startStreaming(RTMP_URL);
+	if (ret) {
+		char buffer[200];
+		sprintf(buffer, "Streaming Status: started [ %s ]", RTMP_URL);
+		updateStatus(STREAMING_STATUS, buffer);
+	}
+	else {
+		updateStatus(STREAMING_STATUS, "Streaming Status: failed");
+	}
+	
+	return ret;
 }
 
 bool CCameraControlDlg::stopStreaming(void) {
+	_pusher.stopStreaming();
+	updateStatus(STREAMING_STATUS, "Streaming Status: end");
 	return true;
 }
-

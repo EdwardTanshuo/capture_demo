@@ -159,14 +159,15 @@ public:
 
 
 		if (command == "start") {
-			bool ret = _delegate->connectCamera();
+			bool ret = _delegate->connectCamera() && _delegate->startStreaming();
+
 			if (ret) {
 				StoreAsync(new StartEvfCommand(_model));
 			}
 		}
 
 		if (command == "end") {
-			bool ret = _delegate->disconnectCamera();
+			bool ret = _delegate->disconnectCamera() && _delegate->stopStreaming();
 			StoreAsync(new EndEvfCommand(_model));
 			StoreAsync(new CloseSessionCommand(_model));
 		}

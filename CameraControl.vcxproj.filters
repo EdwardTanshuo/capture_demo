@@ -37,6 +37,9 @@
     <Filter Include="header\Http">
       <UniqueIdentifier>{efbb4615-0864-42ae-b17b-c2985c717dd1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="header\config">
+      <UniqueIdentifier>{dac3ec46-141b-490b-86f8-a163e1efc8d7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ActionButton.cpp">
@@ -211,6 +214,9 @@
     </ClInclude>
     <ClInclude Include="HttpException.h">
       <Filter>header\Http</Filter>
+    </ClInclude>
+    <ClInclude Include="Config.h">
+      <Filter>header\config</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -76,7 +76,7 @@ DWORD HttpServer::poll() {
 			break;
 
 		case HttpVerbPOST:
-
+			result = SendHttpResponse(500, "bad request", nullptr);
 			break;
 
 		default:
@@ -160,6 +160,11 @@ void HttpServer::run() {
 		catch (HttpException e) {
 			
 		}
+		Sleep(500);
 	}
 }
 
+//observer
+void HttpServer::update(Observable* from, CameraEvent *e) {
+	
+}

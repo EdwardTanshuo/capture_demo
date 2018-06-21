@@ -21,7 +21,7 @@ private:
 	void removeObserver(Observable* ob);
 	void changeEnableWindow();
 
-	void updateStatus(char* status);
+	void updateStatus(int type, const char* status);
 
 public:
 	CCameraControlDlg(CWnd* pParent = NULL);	// standard constructor
