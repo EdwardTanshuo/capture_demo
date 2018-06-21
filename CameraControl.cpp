@@ -44,22 +44,9 @@ BOOL CCameraControlApp::InitInstance() {
 	//Create CameraController
 	_controller = new CameraController();
 
-	// Initialization of SDK
-	int err = EdsInitializeSDK();
-	if (err == EDS_ERR_OK) {
-		isSDKLoaded = true;
-	}
-	else {
-		::MessageBox(NULL, "Cannot init sdk", NULL, MB_OK);
-	}
-	
-	//err = init_camera();
-
 	//Create View Dialog
 	CCameraControlDlg			view;
 
-	//_controller->setCameraModel(_model);
-	//_model->addObserver(&view);
 	// Send Model Event to view	
 	view.setCameraController(_controller);
 

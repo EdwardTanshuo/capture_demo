@@ -59,6 +59,8 @@ protected:
 protected:
 	HICON m_hIcon;
 
+	bool isSDKLoaded = false;
+
 	// Generated message map functions
 	virtual BOOL OnInitDialog();
 	afx_msg LRESULT OnDownloadComplete(WPARAM wParam, LPARAM lParam);

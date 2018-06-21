@@ -34,17 +34,28 @@ static CameraModel* cameraModelFactory(EdsCameraRef camera, EdsDeviceInfo device
 
 int CCameraControlDlg::init_camera() {
 	if (_model != nullptr) {
-		_model->release();
-		_model = nullptr;
+		release_camera();
 	}
 
 	EdsError	 err = EDS_ERR_OK;
 	EdsCameraListRef cameraList = nullptr;
 	EdsUInt32	 count = 0;
 
+	// Initialization of SDK
+	err = EdsInitializeSDK();
+	if (err == EDS_ERR_OK) {
+		isSDKLoaded = true;
+	}
+	else {
+		goto end;
+	}
+
 	// acquisition of camera list
 	if (err == EDS_ERR_OK) {
 		err = EdsGetCameraList(&cameraList);
+	}
+	else {
+		goto end;
 	}
 
 	// acquisition of number of Cameras
@@ -54,10 +65,16 @@ int CCameraControlDlg::init_camera() {
 			err = EDS_ERR_DEVICE_NOT_FOUND;
 		}
 	}
+	else {
+		goto end;
+	}
 
 	// acquisition of camera at the head of the list
 	if (err == EDS_ERR_OK) {
 		err = EdsGetChildAtIndex(cameraList, 0, &_camera);
+	}
+	else {
+		goto end;
 	}
 
 	// acquisition of camera information
@@ -68,10 +85,16 @@ int CCameraControlDlg::init_camera() {
 			err = EDS_ERR_DEVICE_NOT_FOUND;
 		}
 	}
+	else {
+		goto end;
+	}
 
 	// release camera list
 	if (cameraList != nullptr) {
 		EdsRelease(cameraList);
+	}
+	else {
+		goto end;
 	}
 
 	// create Camera model
@@ -138,6 +161,11 @@ end:
 		_controller->setCameraModel(nullptr);
 	}
 
+	if (isSDKLoaded) {
+		EdsTerminateSDK();
+		isSDKLoaded = false;
+	}
+
 	// since the dialog has been closed, return FALSE so that we exit the
 	// application, rather than start the application's message pump.
 	return err;
@@ -159,6 +187,11 @@ void CCameraControlDlg::release_camera() {
 	if (_model != nullptr) {
 		_model->release();
 		_model = nullptr;
+	}
+
+	if (isSDKLoaded) {
+		EdsTerminateSDK();
+		isSDKLoaded = false;
 	}
 
 }
