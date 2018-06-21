@@ -7,6 +7,7 @@
 
 #include "Displayer.h"
 #include "RTMPPusher.h"
+#include "HttpServer.h"
 
 #include "ActionButton.h"
 
@@ -44,6 +45,8 @@ public:
 
 	Displayer		_displayer;
 	RTMPPusher      _pusher;
+
+	HttpServer*		_http = nullptr;
 
 	CameraModel*	_model = nullptr;
 	EdsCameraRef	_camera;

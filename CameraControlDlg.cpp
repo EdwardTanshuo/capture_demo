@@ -10,6 +10,7 @@
 #include "EDSDK.h"
 #include "EDSDKTypes.h"
 
+#include "HttpException.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -222,6 +223,15 @@ BOOL CCameraControlDlg::OnInitDialog() {
 	_camera = nullptr;
 	_model = nullptr;
 
+	try {
+		_http = new HttpServer();
+		_http->start();
+	}
+	catch (HttpException e) {
+		::MessageBox(NULL, "Cannot setup http server", NULL, MB_OK);
+	}
+	
+
 	setupListener(_controller);
 	_controller->setDelegate(this);
 
@@ -242,6 +252,9 @@ void CCameraControlDlg::setupListener(ActionListener* listener) {
 	_displayer.addActionListener(listener);
 	_pusher.setActionCommand("downloadEVF");
 	_pusher.addActionListener(listener);
+
+	_http->setActionCommand("downloadEVF");
+	_http->addActionListener(listener);
 }
 
 
@@ -256,6 +269,8 @@ void CCameraControlDlg::removeObserver(Observable* ob) {
 
 void CCameraControlDlg::OnClose() {
 	// TODO : The control notification handler code is added here or Predetermined processing is called. 
+	delete _http;
+
 	fireEvent("closing");
 	__super::OnClose();
 }
