@@ -108,6 +108,7 @@ int CCameraControlDlg::init_camera() {
 	// create Camera model
 	if (err == EDS_ERR_OK) {
 		_model = cameraModelFactory(_camera, deviceInfo);
+		_http->setupModel(_model);
 		if (_model == nullptr) {
 			err = EDS_ERR_DEVICE_NOT_FOUND;
 		}

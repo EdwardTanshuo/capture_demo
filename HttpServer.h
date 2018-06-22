@@ -7,6 +7,8 @@
 #include "Observer.h"
 #include "Thread.h"
 
+#include "CameraModel.h"
+
 class HttpServer: public ActionSource, public Thread, public Observer {
 protected:
 	// request queue
@@ -15,12 +17,14 @@ protected:
 	HTTP_REQUEST_ID	_request_id;
 	ULONG			_url_added = 0;
 	ULONG			_request_buffer_len;
-
+	CameraModel*	_model = nullptr;
 	bool			_running = false;
 
 protected:
 	// poll the request queue
 	DWORD poll() throw();
+
+	int take_picture();
 
 public:
 	HttpServer() throw();
@@ -38,6 +42,9 @@ public:
 	DWORD SendHttpResponse(IN USHORT code, IN PSTR reason, IN PSTR entity);
 
 	DWORD SendHttpPostResponse();
+
+	// setup camera model
+	void setupModel(CameraModel* model) { _model = model; }
 
 protected:
 	// utils
@@ -64,8 +71,8 @@ protected:
 		puts(buffer);
 	}
 
-	void gen_json(char* buffer, char* value) {
-		sprintf(buffer, "{ \"id\" : \"%s\" }", value);
+	void gen_json(char* buffer, const char* id, int dev_status) {
+		sprintf(buffer, "{ \"id\" : \"%s\", \"result\" : %d }", id, dev_status);
 	}
 
 };

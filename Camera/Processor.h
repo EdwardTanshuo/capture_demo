@@ -90,8 +90,8 @@ public:
 					//If commands that were issued fail ( because of DeviceBusy or other reasons )
 					// and retry is required , note that some cameras may become unstable if multiple 
 					// commands are issued in succession without an intervening interval.
-					//Thus, leave an interval of about 500 ms before commands are reissued.
-					Sleep(500);
+					//Thus, leave an interval of about 20 ms before commands are reissued.
+					Sleep(20);
 					enqueue(command);
 				}
 				else {

@@ -1,6 +1,9 @@
 #include "HttpServer.h"
 #include "HttpException.h"
 
+#include "EDSDK.h"
+#include "EDSDKErrors.h"
+
 #define DEFAULT_REQUEST_BUFFER_LEN 2048
 
 HttpServer::HttpServer() {
@@ -58,6 +61,7 @@ DWORD HttpServer::poll() {
 	ULONG			result;
 	DWORD			bytes_read;
 	std::wstring	query;
+	int				dev_ret;
 
 	RtlZeroMemory(_request, _request_buffer_len);
 	result = HttpReceiveHttpRequest(
@@ -74,12 +78,15 @@ DWORD HttpServer::poll() {
 		switch (_request->Verb) {
 		case HttpVerbGET:
 			query = std::wstring(_request->CookedUrl.pQueryString);
-			char buffer[200];
+			
+			// take picture
+			dev_ret = take_picture();
+
+			char timestamp[200];
 			char json[1024];
-			gen_timestamp(buffer);
-			gen_json(json, buffer);
+			gen_timestamp(timestamp);
+			gen_json(json, timestamp, dev_ret);
 			result = SendHttpResponse(200, "OK", json);
-			fireEvent("TakePicture");
 			break;
 
 		case HttpVerbPOST:
@@ -114,6 +121,17 @@ DWORD HttpServer::poll() {
 	}
 
 	return 0;
+}
+
+int HttpServer::take_picture() {
+	EdsError err = EDS_ERR_OK;
+	bool	 locked = false;
+
+	//Taking a picture
+	err = EdsSendCommand(_model->getCameraObject(), kEdsCameraCommand_PressShutterButton, kEdsCameraCommand_ShutterButton_Completely);
+	EdsSendCommand(_model->getCameraObject(), kEdsCameraCommand_PressShutterButton, kEdsCameraCommand_ShutterButton_OFF);
+
+	return err;
 }
 
 DWORD HttpServer::SendHttpResponse(IN USHORT code, IN PSTR reason, IN PSTR entity) {
