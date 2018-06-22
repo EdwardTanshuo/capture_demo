@@ -1,6 +1,8 @@
 #pragma once
 
 #include <http.h>
+#include <time.h>
+
 #include "ActionSource.h"
 #include "Observer.h"
 #include "Thread.h"
@@ -49,6 +51,21 @@ protected:
 	void add_known_header(HTTP_RESPONSE* resp, ULONG type, PSTR content) {
 		resp->Headers.KnownHeaders[type].pRawValue = (content);
 		resp->Headers.KnownHeaders[type].RawValueLength = (USHORT)strlen(content);
+	}
+	
+	void gen_timestamp(char* buffer) {
+		time_t timer;
+		struct tm* tm_info;
+
+		time(&timer);
+		tm_info = localtime(&timer);
+
+		strftime(buffer, 26, "%Y-%m-%d-%H-%M-%S", tm_info);
+		puts(buffer);
+	}
+
+	void gen_json(char* buffer, char* value) {
+		sprintf(buffer, "{ \"id\" : \"%s\" }", value);
 	}
 
 };

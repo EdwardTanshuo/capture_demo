@@ -267,14 +267,17 @@ BOOL CCameraControlDlg::OnInitDialog() {
 
 void CCameraControlDlg::setupListener(ActionListener* listener) {
 	addActionListener(listener);
+	
 	_btnConnect.setActionCommand("start");
 	_btnConnect.addActionListener(listener);
+	
 	_displayer.setActionCommand("downloadEVF");
 	_displayer.addActionListener(listener);
+	
 	_pusher.setActionCommand("downloadEVF");
 	_pusher.addActionListener(listener);
 
-	_http->setActionCommand("downloadEVF");
+	_http->setActionCommand("TakePicture");
 	_http->addActionListener(listener);
 }
 

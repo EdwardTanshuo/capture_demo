@@ -55,8 +55,9 @@ ULONG HttpServer::add_url(PCWSTR url) {
 }
 
 DWORD HttpServer::poll() {
-	ULONG              result;
-	DWORD              bytes_read;
+	ULONG			result;
+	DWORD			bytes_read;
+	std::wstring	query;
 
 	RtlZeroMemory(_request, _request_buffer_len);
 	result = HttpReceiveHttpRequest(
@@ -72,7 +73,13 @@ DWORD HttpServer::poll() {
 	if (result == NO_ERROR) {
 		switch (_request->Verb) {
 		case HttpVerbGET:
-			result = SendHttpResponse(200, "OK", nullptr);
+			query = std::wstring(_request->CookedUrl.pQueryString);
+			char buffer[200];
+			char json[1024];
+			gen_timestamp(buffer);
+			gen_json(json, buffer);
+			result = SendHttpResponse(200, "OK", json);
+			fireEvent("TakePicture");
 			break;
 
 		case HttpVerbPOST:
