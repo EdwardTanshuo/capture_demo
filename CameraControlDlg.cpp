@@ -361,7 +361,7 @@ bool CCameraControlDlg::connectCamera(void) {
 	switch (ret) {
 	case EDS_ERR_OK:
 		char buffer[1024];
-		sprintf(buffer, "Device Status: connected: [ %s ]", _model->getModelName());
+		sprintf(buffer, "Device Status: connected: [ %s ]", "Ready");
 		updateStatus(DEVICE_STATUS, buffer);
 		break;
 	case EDS_ERR_DEVICE_NOT_FOUND:
