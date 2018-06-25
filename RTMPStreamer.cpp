@@ -15,7 +15,7 @@ extern "C"
 
 #define DEFAULT_WIDTH	960
 #define DEFAULT_HEIGHT	640
-#define DEFAULT_RATE	4 * 1024 * 1024
+#define DEFAULT_RATE	80 * 1024
 #define DEFAULT_URL		"rtmp://127.0.0.1:1935/live/test"
 
 static tjhandle _jpegDecompressor = nullptr;
@@ -218,8 +218,8 @@ Encoder::Encoder(int width, int height, const char* url, long bitrate) {
 		throw AVException(EPERM, "can't create new stream");
 	}
 
-	// set stream time_base, assume that camera frame rate is 10 fps 
-	st->time_base = AVRational{ 1, 10 };
+	// set stream time_base, assume that camera frame rate is 60 fps 
+	st->time_base = AVRational{ 1, 60 };
 
 	// set codec_ctx to stream's codec structure
 	codec_ctx = st->codec;
@@ -234,7 +234,7 @@ Encoder::Encoder(int width, int height, const char* url, long bitrate) {
 	codec_ctx->pix_fmt = OUTPUT_PIX_FMT;
 
 	//H.264 specific options
-	codec_ctx->gop_size = 5;
+	codec_ctx->gop_size = 1;
 	codec_ctx->level = 31;
 	err = av_opt_set(codec_ctx->priv_data, "crf", "12", 0);
 	if (err < 0) {
