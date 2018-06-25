@@ -40,6 +40,9 @@
     <Filter Include="header\config">
       <UniqueIdentifier>{dac3ec46-141b-490b-86f8-a163e1efc8d7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="header\InliteClient">
+      <UniqueIdentifier>{ffb49678-8f86-4c81-8a91-4e8c55c83f20}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ActionButton.cpp">
