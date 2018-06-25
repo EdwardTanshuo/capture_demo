@@ -218,8 +218,8 @@ Encoder::Encoder(int width, int height, const char* url, long bitrate) {
 		throw AVException(EPERM, "can't create new stream");
 	}
 
-	// set stream time_base, assume that camera frame rate is 50 fps 
-	st->time_base = AVRational{ 1, 50 };
+	// set stream time_base, assume that camera frame rate is 35 fps 
+	st->time_base = AVRational{ 1, 35 };
 
 	// set codec_ctx to stream's codec structure
 	codec_ctx = st->codec;
