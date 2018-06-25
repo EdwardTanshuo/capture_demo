@@ -24,7 +24,7 @@ protected:
 	// poll the request queue
 	DWORD poll() throw();
 
-	int take_picture();
+	int takePicture();
 
 public:
 	HttpServer() throw();

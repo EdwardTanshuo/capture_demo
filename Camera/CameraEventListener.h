@@ -61,12 +61,8 @@ public:
 
 		CameraController*	controller = (CameraController *)inContext;
 
-		switch (inEvent) {
-		case kEdsStateEvent_Shutdown:
-			fireEvent(controller, "shutDown");
-			break;
-		}
-
+		fireEvent(controller, "stateChange", &inEvent);
+		
 		return EDS_ERR_OK;
 	}
 

@@ -286,6 +286,7 @@ void CCameraControlDlg::setupListener(ActionListener* listener) {
 void CCameraControlDlg::setupObserver(Observable* ob) {
 	ob->addObserver(static_cast<Observer*>(&_displayer));
 	ob->addObserver(static_cast<Observer*>(&_pusher));
+	ob->addObserver(this);
 }
 
 void CCameraControlDlg::removeObserver(Observable* ob) {
@@ -304,13 +305,13 @@ void CCameraControlDlg::OnClose() {
 void CCameraControlDlg::update(Observable* from, CameraEvent *e) {
 	std::string event = e->getEvent();
 
-	//End of download of image
+	// end of download of image
 	if (event == "DownloadComplete") {
 		//The update processing can be executed from another thread. 
 		::PostMessage(this->m_hWnd, WM_USER_DOWNLOAD_COMPLETE, NULL, NULL);
 	}
 
-	//Progress of download of image
+	// progress of download of image
 	if (event == "ProgressReport") {
 		EdsInt32 percent = *static_cast<EdsInt32 *>(e->getArg());
 
@@ -318,9 +319,48 @@ void CCameraControlDlg::update(Observable* from, CameraEvent *e) {
 		::PostMessage(this->m_hWnd, WM_USER_PROGRESS_REPORT, percent, NULL);
 	}
 
-	//shutdown event
-	if (event == "shutDown") {
-		::PostMessage(this->m_hWnd, WM_CLOSE, 0, NULL);
+	if (event == "stateChange") {
+		int status = *(static_cast<int*>(e->getArg()));
+		char buffer[200];
+		switch (status) {
+		case kEdsStateEvent_Shutdown:
+			// update status
+			sprintf(buffer, "Device Status: [ Disconnected ]");
+			updateStatus(DEVICE_STATUS, buffer);
+			break;
+		case kEdsStateEvent_JobStatusChanged:
+			sprintf(buffer, "kEdsStateEvent_JobStatusChanged:");
+			updateStatus(DEVICE_STATUS, buffer);
+			break;
+		case kEdsStateEvent_WillSoonShutDown:
+			sprintf(buffer, "kEdsStateEvent_WillSoonShutDown");
+			updateStatus(DEVICE_STATUS, buffer);
+			break;
+		case kEdsStateEvent_ShutDownTimerUpdate:
+			sprintf(buffer, " kEdsStateEvent_ShutDownTimerUpdate");
+			updateStatus(DEVICE_STATUS, buffer);
+			break;
+		case kEdsStateEvent_CaptureError:
+			sprintf(buffer, "kEdsStateEvent_CaptureError");
+			updateStatus(DEVICE_STATUS, buffer);
+			break;
+		case kEdsStateEvent_InternalError:
+			sprintf(buffer, "kEdsStateEvent_InternalError");
+			updateStatus(DEVICE_STATUS, buffer);
+			break;
+		case kEdsStateEvent_AfResult:
+			sprintf(buffer, "kEdsStateEvent_AfResult");
+			updateStatus(DEVICE_STATUS, buffer);
+			break;
+		case kEdsStateEvent_BulbExposureTime:
+			sprintf(buffer, "kEdsStateEvent_BulbExposureTime");
+			updateStatus(DEVICE_STATUS, buffer);
+			break;
+		default:
+			sprintf(buffer, "Device Status: Unknown");
+			updateStatus(DEVICE_STATUS, buffer);
+			break;
+		}
 	}
 }
 

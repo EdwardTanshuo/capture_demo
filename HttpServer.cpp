@@ -80,7 +80,7 @@ DWORD HttpServer::poll() {
 			query = std::wstring(_request->CookedUrl.pQueryString);
 			
 			// take picture
-			dev_ret = take_picture();
+			dev_ret = takePicture();
 
 			char timestamp[200];
 			char json[1024];
@@ -123,13 +123,12 @@ DWORD HttpServer::poll() {
 	return 0;
 }
 
-int HttpServer::take_picture() {
+int HttpServer::takePicture() {
 	EdsError err = EDS_ERR_OK;
-	bool	 locked = false;
-
+	
 	//Taking a picture
 	err = EdsSendCommand(_model->getCameraObject(), kEdsCameraCommand_PressShutterButton, kEdsCameraCommand_ShutterButton_Completely);
-	EdsSendCommand(_model->getCameraObject(), kEdsCameraCommand_PressShutterButton, kEdsCameraCommand_ShutterButton_OFF);
+	err = EdsSendCommand(_model->getCameraObject(), kEdsCameraCommand_PressShutterButton, kEdsCameraCommand_ShutterButton_OFF);
 
 	return err;
 }
@@ -178,18 +177,20 @@ DWORD HttpServer::SendHttpPostResponse() {
 
 // start the run proc
 void HttpServer::run() {
+	CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 	while (true) {
 		try {
 			poll();
 		}
 		catch (HttpException e) {
-			
+			std::cerr << e.getMessage();
 		}
 		Sleep(500);
 	}
+	CoUninitialize();
 }
 
-//observer
+// observer
 void HttpServer::update(Observable* from, CameraEvent *e) {
 	
 }

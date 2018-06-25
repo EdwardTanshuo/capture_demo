@@ -147,8 +147,8 @@ public:
 			StoreAsync(new DownloadCommand(_model, static_cast<EdsBaseRef>(event.getArg())));
 		}
 
-		if (command == "shutDown") {
-			StoreAsync(new NotifyCommand(_model, "shutDown"));
+		if (command == "stateChange") {
+			StoreAsync(new NotifyCommand(_model, "stateChange", *static_cast<EdsUInt32*>(event.getArg())));
 		}
 
 		if (command == "closing") {

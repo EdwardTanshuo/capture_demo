@@ -24,15 +24,16 @@
 class NotifyCommand : public Command
 {
 	std::string	_notifyString;
+	int		_arg;
 
 public:
-	NotifyCommand(CameraModel *model, std::string notifyString)
-		: Command(model) , _notifyString(notifyString){}
+	NotifyCommand(CameraModel *model, std::string notifyString, int arg = 0)
+		: Command(model), _notifyString(notifyString), _arg(arg) {}
 
     // Execute command	
 	virtual bool execute()
 	{
-		CameraEvent e(_notifyString, NULL);
+		CameraEvent e(_notifyString, &_arg);
 		_model->notifyObservers(&e);
 
 		return true;
