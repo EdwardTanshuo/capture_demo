@@ -7,9 +7,8 @@
 #include "Observer.h"
 #include "Thread.h"
 
-#include "InliteClient.h"
-
 #include "CameraModel.h"
+#include "InliteClient.h"
 
 class HttpServer: public ActionSource, public Thread, public Observer {
 protected:
@@ -21,6 +20,7 @@ protected:
 	ULONG			_request_buffer_len;
 	CameraModel*	_model = nullptr;
 	bool			_running = false;
+	InliteClient	_client;
 
 protected:
 	// poll the request queue

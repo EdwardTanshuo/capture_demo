@@ -4,6 +4,8 @@
 #include "EDSDK.h"
 #include "EDSDKErrors.h"
 
+#include "Config.h"
+
 #define DEFAULT_REQUEST_BUFFER_LEN 2048
 
 HttpServer::HttpServer() {
@@ -58,10 +60,11 @@ ULONG HttpServer::add_url(PCWSTR url) {
 }
 
 DWORD HttpServer::poll() {
-	ULONG			result;
-	DWORD			bytes_read;
-	std::wstring	query;
-	int				dev_ret;
+	ULONG				result;
+	DWORD				bytes_read;
+	std::wstring		query;
+	int					dev_ret;
+	web::json::value	list;
 
 	RtlZeroMemory(_request, _request_buffer_len);
 	result = HttpReceiveHttpRequest(
@@ -81,6 +84,9 @@ DWORD HttpServer::poll() {
 			
 			// take picture
 			dev_ret = takePicture();
+
+			// process image
+			list = _client.post_image_base64(U(INLITE_URL), L"").wait();
 
 			char timestamp[200];
 			char json[1024];
