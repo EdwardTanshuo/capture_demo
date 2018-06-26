@@ -72,6 +72,9 @@
     <ClCompile Include="HttpServer.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="InliteClient.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActionButton.h">
@@ -220,6 +223,9 @@
     </ClInclude>
     <ClInclude Include="Config.h">
       <Filter>header\config</Filter>
+    </ClInclude>
+    <ClInclude Include="InliteClient.h">
+      <Filter>header\InliteClient</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

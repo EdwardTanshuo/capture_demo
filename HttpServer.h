@@ -7,6 +7,8 @@
 #include "Observer.h"
 #include "Thread.h"
 
+#include "InliteClient.h"
+
 #include "CameraModel.h"
 
 class HttpServer: public ActionSource, public Thread, public Observer {
