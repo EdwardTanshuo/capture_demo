@@ -33,16 +33,15 @@ public:
 		EdsError err = EDS_ERR_OK;
 	
 		//The communication with the camera is ended
-		err = EdsCloseSession(_model->getCameraObject());
-
-
-		//Notification of error
-		if(err != EDS_ERR_OK)
-		{
-			CameraEvent e("error", &err);
-			_model->notifyObservers(&e);
+		if (_model) {
+			err = EdsCloseSession(_model->getCameraObject());
+			
+			//Notification of error
+			if (err != EDS_ERR_OK) {
+				CameraEvent e("error", &err);
+				_model->notifyObservers(&e);
+			}
 		}
-
 		return true;
 	}
 
