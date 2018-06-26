@@ -41,7 +41,7 @@ public:
 	//observer
 	virtual void update(Observable* from, CameraEvent *e);
 
-	DWORD SendHttpResponse(IN USHORT code, IN PSTR reason, IN PSTR entity);
+	DWORD SendHttpResponse(IN HTTP_REQUEST_ID request_id, IN USHORT code, IN PSTR reason, IN PSTR entity);
 
 	DWORD SendHttpPostResponse();
 

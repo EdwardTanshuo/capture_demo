@@ -86,21 +86,21 @@ DWORD HttpServer::poll() {
 			dev_ret = takePicture();
 
 			// process image
-			list = _client.post_image_base64(U(INLITE_URL), L"").wait();
+			//list = _client.post_image_base64(U(INLITE_URL), L"").wait();
 
 			char timestamp[200];
 			char json[1024];
 			gen_timestamp(timestamp);
 			gen_json(json, timestamp, dev_ret);
-			result = SendHttpResponse(200, "OK", json);
+			result = SendHttpResponse(_request->RequestId, 200, "OK", json);
 			break;
 
 		case HttpVerbPOST:
-			result = SendHttpResponse(500, "bad request", nullptr);
+			result = SendHttpResponse(_request->RequestId, 500, "bad request", nullptr);
 			break;
 
 		default:
-			result = SendHttpResponse(500, "bad request", nullptr);
+			result = SendHttpResponse(_request->RequestId, 500, "bad request", nullptr);
 		}
 
 		if (result != NO_ERROR) {
@@ -130,16 +130,19 @@ DWORD HttpServer::poll() {
 }
 
 int HttpServer::takePicture() {
-	EdsError err = EDS_ERR_OK;
+	EdsError err = -1;
+	if (_model) {
+		_model->retain();
+		//Taking a picture
+		err = EdsSendCommand(_model->getCameraObject(), kEdsCameraCommand_PressShutterButton, kEdsCameraCommand_ShutterButton_Completely);
+		err = EdsSendCommand(_model->getCameraObject(), kEdsCameraCommand_PressShutterButton, kEdsCameraCommand_ShutterButton_OFF);
+		_model->release();
+	}
 	
-	//Taking a picture
-	err = EdsSendCommand(_model->getCameraObject(), kEdsCameraCommand_PressShutterButton, kEdsCameraCommand_ShutterButton_Completely);
-	err = EdsSendCommand(_model->getCameraObject(), kEdsCameraCommand_PressShutterButton, kEdsCameraCommand_ShutterButton_OFF);
-
 	return err;
 }
 
-DWORD HttpServer::SendHttpResponse(IN USHORT code, IN PSTR reason, IN PSTR entity) {
+DWORD HttpServer::SendHttpResponse(IN HTTP_REQUEST_ID request_id, IN USHORT code, IN PSTR reason, IN PSTR entity) {
 	HTTP_RESPONSE   response;
 	HTTP_DATA_CHUNK data_chunk;
 	DWORD           result;
@@ -163,7 +166,7 @@ DWORD HttpServer::SendHttpResponse(IN USHORT code, IN PSTR reason, IN PSTR entit
 
 	result = HttpSendHttpResponse(
 		_req_queue,
-		_request->RequestId,
+		request_id,
 		0,
 		&response,
 		nullptr,

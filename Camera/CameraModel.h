@@ -43,13 +43,13 @@ protected:
 	EdsPropertyDesc _ImageQualityDesc;
 	EdsPropertyDesc _evfAFModeDesc;
 
-	int ref_counter = 0;
+	int				_ref_counter = 0;
 
 public:
 	void release() {
 		_syncObject.lock();
-		ref_counter--;
-		if (ref_counter <= 0) {
+		_ref_counter--;
+		if (_ref_counter <= 0) {
 			_syncObject.unlock();
 			delete this;
 			return;
@@ -59,7 +59,7 @@ public:
 
 	void retain() {
 		_syncObject.lock();
-		ref_counter++;
+		_ref_counter++;
 		_syncObject.unlock();
 	};
 
