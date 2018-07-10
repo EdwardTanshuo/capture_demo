@@ -4,6 +4,10 @@
 #include "EDSDK.h"
 #include "EDSDKErrors.h"
 
+#include "CameraEvent.h"
+
+#include "base64.h"
+
 #include "Config.h"
 
 #define DEFAULT_REQUEST_BUFFER_LEN 2048
@@ -200,6 +204,12 @@ void HttpServer::run() {
 }
 
 // observer
-void HttpServer::update(Observable* from, CameraEvent *e) {
-	
+void HttpServer::update(Observable* from, CameraEvent* e) {
+	std::string event = e->getEvent();
+
+	//End of download of image
+	if (event == "DownloadComplete") {
+		
+		
+	}
 }
