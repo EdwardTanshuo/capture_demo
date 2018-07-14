@@ -210,6 +210,5 @@ void HttpServer::update(Observable* from, CameraEvent* e) {
 	//End of download of image
 	if (event == "DownloadComplete") {
 		
-		
 	}
 }

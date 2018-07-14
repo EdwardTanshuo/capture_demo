@@ -21,10 +21,12 @@ public:
 		}
 	};
 
-	pplx::task<web::json::value> post_image_base64(const uri &host, std::wstring base64_image);
+	pplx::task<web::json::value> post_image(const uri &host, const unsigned char* data, int in_len);
 
 private:
 	http_client* _client = nullptr;
+
+	pplx::task<web::json::value> post_image_base64(const uri &host, std::wstring base64_image);
 
 private:
 	void init_client(const uri &base_uri) {

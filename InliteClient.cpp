@@ -1,5 +1,16 @@
 #include "InliteClient.h"
 
+#include <iostream>
+#include "base64.h"
+
+
+pplx::task<web::json::value> InliteClient::post_image(const uri &host, const unsigned char* data, int in_len) {
+	std::string base64_str = base64_encode(data, in_len);
+	std::wstring base64_wstr(base64_str.begin(), base64_str.end());
+
+	return this->post_image_base64(host, base64_wstr);
+}
+
 pplx::task<web::json::value> InliteClient::post_image_base64(const uri &host, std::wstring base64_image) {
 	// set host
 	init_client(host);
@@ -16,7 +27,7 @@ pplx::task<web::json::value> InliteClient::post_image_base64(const uri &host, st
 	// start request
 	return _client->request(request).then([](http_response response) {
 		auto bodyStream = response.body();
-		// TODO: Barcode Algptithm
+		// TODO: Barcode Algotithm
 		
 		return pplx::task_from_result(web::json::value());
 	});
