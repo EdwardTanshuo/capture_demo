@@ -6,8 +6,6 @@
 
 #include "CameraEvent.h"
 
-#include "base64.h"
-
 #include "Config.h"
 
 #define DEFAULT_REQUEST_BUFFER_LEN 2048

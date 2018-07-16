@@ -8,6 +8,8 @@
 #define FILE_ENDPOINT		"/barcodes/file"
 #define BASE64_ENDPOINT		"/barcodes/base64"
 
+#define INLITE_HOST			"http://10.100.100.144:80/wabr/barcodes"
+
 using namespace web::http;
 using namespace web::http::client;
 
@@ -21,7 +23,7 @@ public:
 		}
 	};
 
-	pplx::task<web::json::value> post_image(const uri &host, const unsigned char* data, int in_len);
+	pplx::task<web::json::value> post_image(const unsigned char* data, int in_len);
 
 private:
 	http_client* _client = nullptr;
