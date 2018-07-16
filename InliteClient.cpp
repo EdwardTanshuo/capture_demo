@@ -9,15 +9,15 @@
 #define AUTH_CODE L"AOah5cKhAxgrd2YrCIYYVqDzFgz539Zn"
 
 static utility::string_t make_form(const std::vector<std::pair<std::wstring, std::wstring>>& form) {
-	auto iter = std::vector<std::pair<std::wstring, std::wstring>>::iterator();
+	auto iter = form.begin();
 	utility::string_t result = L"";
-	for (; iter != form.end(); iter ++) {
+	for (iter = form.begin(); iter != form.end(); iter ++) {
 		if (iter != form.begin()) {
 			result += L"&";
 		}
 
 		auto key = iter->first;
-		auto value = iter->first;
+		auto value = iter->second;
 
 		result = result + key + L"=" + value;
 	}
@@ -32,12 +32,12 @@ pplx::task<web::json::value> InliteClient::post_image(const unsigned char* data,
 	return this->post_image_base64(host, base64_wstr);
 }
 
-pplx::task<web::json::value> InliteClient::post_image_base64(const uri& host, std::wstring base64_image) {
+pplx::task<web::json::value> InliteClient::post_image_base64(const uri& host, const std::wstring& base64_image) {
 	// set host
 	init_client(host);
 
 	// contruct base64 image body 
-	auto base64_image_value = L"data:application/jpg;base64," + base64_image + L":::" + L"image.jpg";
+	auto base64_image_value = L"data:image/jpegdata:image/jpeg;base64," + base64_image + L":::" + L"image.jpeg";
 
 	// construct the post form
 	std::vector<std::pair<std::wstring, std::wstring>> form;
@@ -49,6 +49,7 @@ pplx::task<web::json::value> InliteClient::post_image_base64(const uri& host, st
 
 	// setup request
 	http_request request(methods::POST);
+	
 	request.headers().add(L"Authorization", AUTH_CODE);
 	request.set_body(encoded_form);
 	request.set_request_uri(U(BASE64_ENDPOINT));
