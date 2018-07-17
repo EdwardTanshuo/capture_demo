@@ -34,12 +34,12 @@ pplx::task<web::json::value> InliteClient::post_image_base64(const uri& host, co
 	http_request request(methods::POST);
 	MultipartParser parser;
 	request.headers().add(L"Authorization", AUTH_CODE);
-	parser.AddParameter("image", "info");
+	parser.AddParameter("image", base64_image_value);
 	parser.AddParameter("options", "info");
 	parser.AddParameter("types", "1d,2d");
 	parser.AddParameter("tbr", "119");
 	auto body = parser.GenBodyContent();
-	std::cout << body << std::endl;
+	
 	request.set_body(body, "multipart/form-data; boundary=" + parser.boundary());
 	request.set_request_uri(U(BASE64_ENDPOINT));
 	
