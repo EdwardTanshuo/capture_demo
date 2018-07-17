@@ -163,7 +163,7 @@ int HttpServer::takePicture() {
 	char* test_image = &sample[0];
 
 	InliteClient test;
-	auto promise = test.post_image((unsigned char*)test_image, 1024);
+	auto promise = test.post_image((unsigned char*)test_image, sample.size());
 	auto json = promise.wait();
 
 	

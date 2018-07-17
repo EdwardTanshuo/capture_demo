@@ -4,55 +4,46 @@
 #include <utility>
 #include <vector>
 
+#include "MultipartParser.h"
 #include "base64.h"
 
 #define AUTH_CODE L"AOah5cKhAxgrd2YrCIYYVqDzFgz539Zn"
 
-static utility::string_t make_form(const std::vector<std::pair<std::wstring, std::wstring>>& form) {
-	auto iter = form.begin();
-	utility::string_t result = L"";
-	for (iter = form.begin(); iter != form.end(); iter ++) {
-		if (iter != form.begin()) {
-			result += L"&";
-		}
-
-		auto key = iter->first;
-		auto value = iter->second;
-
-		result = result + key + L"=" + value;
-	}
-	return result;
-}
-
 pplx::task<web::json::value> InliteClient::post_image(const unsigned char* data, int in_len) {
 	uri host(U(INLITE_HOST));
 	std::string base64_str = base64_encode(data, in_len);
-	std::wstring base64_wstr(base64_str.begin(), base64_str.end());
-
-	return this->post_image_base64(host, base64_wstr);
+	
+	return this->post_image_base64(host, base64_str);
 }
 
-pplx::task<web::json::value> InliteClient::post_image_base64(const uri& host, const std::wstring& base64_image) {
+pplx::task<web::json::value> InliteClient::post_image_base64(const uri& host, const std::string& base64_image) {
 	// set host
 	init_client(host);
 
 	// contruct base64 image body 
-	auto base64_image_value = L"data:image/jpegdata:image/jpeg;base64," + base64_image + L":::" + L"image.jpeg";
+	auto base64_image_value = "data:image/jpegdata:image/jpeg;base64," + base64_image + ":::" + "image.jpeg";
 
 	// construct the post form
 	std::vector<std::pair<std::wstring, std::wstring>> form;
-	form.push_back(std::make_pair(L"image", base64_image_value));
+	
 	form.push_back(std::make_pair(L"options", L"info"));
 	form.push_back(std::make_pair(L"types", L"1d,2d"));
 	form.push_back(std::make_pair(L"tbr", L"119"));
-	auto encoded_form = make_form(form);
-
+	
 	// setup request
 	http_request request(methods::POST);
-	
+	MultipartParser parser;
 	request.headers().add(L"Authorization", AUTH_CODE);
-	request.set_body(encoded_form);
+	parser.AddParameter("image", "info");
+	parser.AddParameter("options", "info");
+	parser.AddParameter("types", "1d,2d");
+	parser.AddParameter("tbr", "119");
+	auto body = parser.GenBodyContent();
+	std::cout << body << std::endl;
+	request.set_body(body, "multipart/form-data; boundary=" + parser.boundary());
 	request.set_request_uri(U(BASE64_ENDPOINT));
+	
+	std::stringstream data;
 
 	// start request
 	return _client->request(request).then([](http_response response) {

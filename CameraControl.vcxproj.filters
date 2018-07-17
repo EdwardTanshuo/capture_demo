@@ -78,6 +78,9 @@
     <ClCompile Include="InliteClient.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="MultipartParser.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActionButton.h">
@@ -232,6 +235,9 @@
     </ClInclude>
     <ClInclude Include="base64.h">
       <Filter>header\base64</Filter>
+    </ClInclude>
+    <ClInclude Include="MultipartParser.h">
+      <Filter>header\Http</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

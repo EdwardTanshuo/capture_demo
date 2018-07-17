@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="packages\openssl.1.0.1.21\build\native\openssl.props" Condition="Exists('packages\openssl.1.0.1.21\build\native\openssl.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -121,6 +122,7 @@
     <ClCompile Include="CameraControlDlg.cpp" />
     <ClCompile Include="Displayer.cpp" />
     <ClCompile Include="HttpServer.cpp" />
+    <ClCompile Include="MultipartParser.cpp" />
     <ClCompile Include="RTMPPusher.cpp" />
     <ClCompile Include="RTMPStreamer.cpp" />
     <ClCompile Include="InliteClient.cpp" />
@@ -166,6 +168,7 @@
     <ClInclude Include="Config.h" />
     <ClInclude Include="Displayer.h" />
     <ClInclude Include="base64.h" />
+    <ClInclude Include="MultipartParser.h" />
     <ClInclude Include="InliteClient.h" />
     <ClInclude Include="HttpException.h" />
     <ClInclude Include="HttpServer.h" />
@@ -210,6 +213,12 @@
     <Import Project="packages\cpprestsdk.v120.winxp.msvcstl.dyn.rt-dyn.2.9.1\build\native\cpprestsdk.v120.winxp.msvcstl.dyn.rt-dyn.targets" Condition="Exists('packages\cpprestsdk.v120.winxp.msvcstl.dyn.rt-dyn.2.9.1\build\native\cpprestsdk.v120.winxp.msvcstl.dyn.rt-dyn.targets')" />
     <Import Project="packages\cpprestsdk.v140.winapp.msvcstl.dyn.rt-dyn.2.9.1\build\native\cpprestsdk.v140.winapp.msvcstl.dyn.rt-dyn.targets" Condition="Exists('packages\cpprestsdk.v140.winapp.msvcstl.dyn.rt-dyn.2.9.1\build\native\cpprestsdk.v140.winapp.msvcstl.dyn.rt-dyn.targets')" />
     <Import Project="packages\cpprestsdk.v140.windesktop.msvcstl.dyn.rt-dyn.2.9.1\build\native\cpprestsdk.v140.windesktop.msvcstl.dyn.rt-dyn.targets" Condition="Exists('packages\cpprestsdk.v140.windesktop.msvcstl.dyn.rt-dyn.2.9.1\build\native\cpprestsdk.v140.windesktop.msvcstl.dyn.rt-dyn.targets')" />
+    <Import Project="packages\zlib.redist.1.2.8.1\build\native\zlib.redist.targets" Condition="Exists('packages\zlib.redist.1.2.8.1\build\native\zlib.redist.targets')" />
+    <Import Project="packages\zlib.1.2.8.1\build\native\zlib.targets" Condition="Exists('packages\zlib.1.2.8.1\build\native\zlib.targets')" />
+    <Import Project="packages\libssh2.redist.1.4.3.1\build\native\libssh2.redist.targets" Condition="Exists('packages\libssh2.redist.1.4.3.1\build\native\libssh2.redist.targets')" />
+    <Import Project="packages\openssl.redist.1.0.1.25\build\native\openssl.redist.targets" Condition="Exists('packages\openssl.redist.1.0.1.25\build\native\openssl.redist.targets')" />
+    <Import Project="packages\openssl.1.0.1.21\build\native\openssl.targets" Condition="Exists('packages\openssl.1.0.1.21\build\native\openssl.targets')" />
+    <Import Project="packages\libssh2.1.4.3.1\build\native\libssh2.targets" Condition="Exists('packages\libssh2.1.4.3.1\build\native\libssh2.targets')" />
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
@@ -228,5 +237,12 @@
     <Error Condition="!Exists('packages\cpprestsdk.v120.winxp.msvcstl.dyn.rt-dyn.2.9.1\build\native\cpprestsdk.v120.winxp.msvcstl.dyn.rt-dyn.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\cpprestsdk.v120.winxp.msvcstl.dyn.rt-dyn.2.9.1\build\native\cpprestsdk.v120.winxp.msvcstl.dyn.rt-dyn.targets'))" />
     <Error Condition="!Exists('packages\cpprestsdk.v140.winapp.msvcstl.dyn.rt-dyn.2.9.1\build\native\cpprestsdk.v140.winapp.msvcstl.dyn.rt-dyn.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\cpprestsdk.v140.winapp.msvcstl.dyn.rt-dyn.2.9.1\build\native\cpprestsdk.v140.winapp.msvcstl.dyn.rt-dyn.targets'))" />
     <Error Condition="!Exists('packages\cpprestsdk.v140.windesktop.msvcstl.dyn.rt-dyn.2.9.1\build\native\cpprestsdk.v140.windesktop.msvcstl.dyn.rt-dyn.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\cpprestsdk.v140.windesktop.msvcstl.dyn.rt-dyn.2.9.1\build\native\cpprestsdk.v140.windesktop.msvcstl.dyn.rt-dyn.targets'))" />
+    <Error Condition="!Exists('packages\zlib.redist.1.2.8.1\build\native\zlib.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\zlib.redist.1.2.8.1\build\native\zlib.redist.targets'))" />
+    <Error Condition="!Exists('packages\zlib.1.2.8.1\build\native\zlib.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\zlib.1.2.8.1\build\native\zlib.targets'))" />
+    <Error Condition="!Exists('packages\libssh2.redist.1.4.3.1\build\native\libssh2.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\libssh2.redist.1.4.3.1\build\native\libssh2.redist.targets'))" />
+    <Error Condition="!Exists('packages\openssl.redist.1.0.1.25\build\native\openssl.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\openssl.redist.1.0.1.25\build\native\openssl.redist.targets'))" />
+    <Error Condition="!Exists('packages\openssl.1.0.1.21\build\native\openssl.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\openssl.1.0.1.21\build\native\openssl.props'))" />
+    <Error Condition="!Exists('packages\openssl.1.0.1.21\build\native\openssl.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\openssl.1.0.1.21\build\native\openssl.targets'))" />
+    <Error Condition="!Exists('packages\libssh2.1.4.3.1\build\native\libssh2.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\libssh2.1.4.3.1\build\native\libssh2.targets'))" />
   </Target>
 </Project>
