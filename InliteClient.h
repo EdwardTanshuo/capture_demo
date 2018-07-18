@@ -32,8 +32,11 @@ private:
 
 private:
 	void init_client(const uri &base_uri) {
-		if (_client == nullptr)
-			_client = new http_client(base_uri);
+		if (_client == nullptr) {
+			http_client_config config;
+			config.set_timeout(std::chrono::seconds(1000));
+			_client = new http_client(base_uri, config);
+		}
 	};
 };
 

@@ -23,13 +23,6 @@ pplx::task<web::json::value> InliteClient::post_image_base64(const uri& host, co
 	// contruct base64 image body 
 	auto base64_image_value = "data:image/jpegdata:image/jpeg;base64," + base64_image + ":::" + "image.jpeg";
 
-	// construct the post form
-	std::vector<std::pair<std::wstring, std::wstring>> form;
-	
-	form.push_back(std::make_pair(L"options", L"info"));
-	form.push_back(std::make_pair(L"types", L"1d,2d"));
-	form.push_back(std::make_pair(L"tbr", L"119"));
-	
 	// setup request
 	http_request request(methods::POST);
 	MultipartParser parser;
@@ -37,13 +30,11 @@ pplx::task<web::json::value> InliteClient::post_image_base64(const uri& host, co
 	parser.AddParameter("image", base64_image_value);
 	parser.AddParameter("options", "info");
 	parser.AddParameter("types", "1d,2d");
-	parser.AddParameter("tbr", "119");
+	parser.AddParameter("tbr", "101");
 	auto body = parser.GenBodyContent();
 	
 	request.set_body(body, "multipart/form-data; boundary=" + parser.boundary());
 	request.set_request_uri(U(BASE64_ENDPOINT));
-	
-	std::stringstream data;
 
 	// start request
 	return _client->request(request).then([](http_response response) {
@@ -55,5 +46,13 @@ pplx::task<web::json::value> InliteClient::post_image_base64(const uri& host, co
 
 		// Handle error cases, for now return empty json value... 
 		return pplx::task_from_result(web::json::value());
+	}).then([](web::json::value json) {
+		auto barcodes = json[L"Barcodes"].as_array();
+		for (auto iter : barcodes) {
+			auto barcode = iter.as_object();
+			auto text = barcode[L"Text"].as_string();
+			auto s = barcode[L"Data"].as_string();
+		}
+		return json;
 	});
 }

@@ -163,19 +163,12 @@ int HttpServer::takePicture() {
 	char* test_image = &sample[0];
 
 	InliteClient test;
-	auto promise = std::move(test.post_image((unsigned char*)test_image, sample.size()));
-	promise.wait();
-	auto json = std::move(promise.get());
+	auto promise = test.post_image((unsigned char*)test_image, sample.size());
 	try {
-		auto barcodes = json[L"Barcodes"].as_array();
-		for (auto iter : barcodes) {
-			auto barcode = iter.as_object();
-			auto text = barcode[L"Text"].as_string();
-			auto s = barcode[L"Data"].as_string();
-		}
+		promise.wait();
 	}
 	catch (std::exception e) {
-		
+	
 	}
 	return err;
 }
