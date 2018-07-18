@@ -163,9 +163,9 @@ int HttpServer::takePicture() {
 	char* test_image = &sample[0];
 
 	InliteClient test;
-	auto promise = test.post_image((unsigned char*)test_image, sample.size());
-	auto json = promise.wait();
-
+	auto promise = std::move(test.post_image((unsigned char*)test_image, sample.size()));
+	promise.wait();
+	auto json = std::move(promise.get());
 	
 	return err;
 }

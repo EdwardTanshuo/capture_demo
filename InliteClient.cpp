@@ -49,7 +49,11 @@ pplx::task<web::json::value> InliteClient::post_image_base64(const uri& host, co
 	return _client->request(request).then([](http_response response) {
 		auto bodyStream = response.body();
 		// TODO: Barcode Algotithm
-		
+		if (response.status_code() == status_codes::OK) {
+			return response.extract_json();
+		}
+
+		// Handle error cases, for now return empty json value... 
 		return pplx::task_from_result(web::json::value());
 	});
 }
