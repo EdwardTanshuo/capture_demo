@@ -123,6 +123,7 @@
     <ClCompile Include="Displayer.cpp" />
     <ClCompile Include="HttpServer.cpp" />
     <ClCompile Include="MultipartParser.cpp" />
+    <ClCompile Include="QR\QuadTree.cpp" />
     <ClCompile Include="RTMPPusher.cpp" />
     <ClCompile Include="RTMPStreamer.cpp" />
     <ClCompile Include="InliteClient.cpp" />
@@ -180,6 +181,8 @@
     <ClInclude Include="include\jmorecfg.h" />
     <ClInclude Include="include\jpeglib.h" />
     <ClInclude Include="include\turbojpeg.h" />
+    <ClInclude Include="QR\CoorReader.h" />
+    <ClInclude Include="QR\QuadTree.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="RTMPPusher.h" />
     <ClInclude Include="RTMPStreamer.h" />

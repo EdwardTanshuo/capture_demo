@@ -46,6 +46,9 @@
     <Filter Include="header\base64">
       <UniqueIdentifier>{284a280d-e1f6-440e-9e43-abd1db92232c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="header\BarcodeSorter">
+      <UniqueIdentifier>{0bedee7d-4b02-4448-a71d-5490a2e53eca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ActionButton.cpp">
@@ -79,6 +82,9 @@
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="MultipartParser.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="QR\QuadTree.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -238,6 +244,12 @@
     </ClInclude>
     <ClInclude Include="MultipartParser.h">
       <Filter>header\Http</Filter>
+    </ClInclude>
+    <ClInclude Include="QR\QuadTree.h">
+      <Filter>header\BarcodeSorter</Filter>
+    </ClInclude>
+    <ClInclude Include="QR\CoorReader.h">
+      <Filter>header\BarcodeSorter</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

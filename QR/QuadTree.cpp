@@ -1,4 +1,5 @@
-#include "quad_tree.h"
+#include "QuadTree.h"
+#include <algorithm>
 #include <unordered_map>
 #include <utility>
 
@@ -41,16 +42,16 @@ namespace tree {
 		int top_vetex_size = top_vetex.size();
 		
 		// horizontal max lenth
-		int temp_h_len[left_vetex_size];
+		std::vector<int> temp_h_len(left_vetex_size);
 		for (i = 0; i < left_vetex_size; i ++) {
 			TreeNode* iter;
 			int temp_len = 0;
 			for (iter = left_vetex[0]; iter != nullptr; iter = iter->children[RIGHT]) {
 				temp_len ++;
 			}
-			temp_h_len[i] = temp_len;
+			temp_h_len.push_back(temp_len);
 		}
-		int max_h_len = *std::max_element(temp_h_len, temp_h_len + left_vetex_size);
+		int max_h_len = *std::max_element(temp_h_len.begin(), temp_h_len.end());
 		
 		// calculate all the h_index of left edge nodes
 		for (i = 0; i < left_vetex_size; i ++) {
@@ -68,16 +69,16 @@ namespace tree {
 		}
 		
 		// vertical max lenth
-		int temp_v_len[top_vetex_size];
+		std::vector<int> temp_v_len(top_vetex_size);
 		for (i = 0; i < top_vetex_size; i ++) {
 			TreeNode* iter;
 			int temp_len = 0;
 			for (iter = top_vetex[0]; iter != nullptr; iter = iter->children[DOWN]) {
 				temp_len ++;
 			}
-			temp_v_len[i] = temp_len;
+			temp_v_len.push_back(temp_len);
 		}
-		int max_v_len = *std::max_element(temp_v_len, temp_v_len + top_vetex_size);
+		int max_v_len = *std::max_element(temp_v_len.begin(), temp_v_len.end());
 		
 		// calculate all the v_index of left edge nodes
 		for (i = 0; i < top_vetex_size; i ++) {
@@ -95,7 +96,7 @@ namespace tree {
 		}
 		
 		// generate the matrix
-		TreeNode* matrix[w][h] = { nullptr };
+		std::vector<std::vector<TreeNode*>> matrix(w, std::vector<TreeNode*>(h, nullptr));
 		for (i = 0; i < size; i ++) {
 			TreeNode* iter = nodes[i];
 			matrix[m_h[iter]][m_v[iter]] = iter;
@@ -105,7 +106,9 @@ namespace tree {
 		std::vector<TreeNode*> result = std::vector<TreeNode*>();
 		for(i = 0; i < w; i ++) {
 			for(j = 0; j < h; j ++) {
-				result.push_back(matrix[i][j]);
+				if (matrix[i][j] != nullptr) {
+					result.push_back(matrix[i][j]);
+				}
 			}
 		}
 		

@@ -166,7 +166,17 @@ int HttpServer::takePicture() {
 	auto promise = std::move(test.post_image((unsigned char*)test_image, sample.size()));
 	promise.wait();
 	auto json = std::move(promise.get());
-	
+	try {
+		auto barcodes = json[L"Barcodes"].as_array();
+		for (auto iter : barcodes) {
+			auto barcode = iter.as_object();
+			auto text = barcode[L"Text"].as_string();
+			auto s = barcode[L"Data"].as_string();
+		}
+	}
+	catch (std::exception e) {
+		
+	}
 	return err;
 }
 
