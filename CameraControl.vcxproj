@@ -62,7 +62,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>./include;./Command;./Camera;./Class;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./QR;./include;./Command;./Camera;./Class;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;WINVER=0x0501;_WIN32_WINNT=0x0501;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -181,7 +181,7 @@
     <ClInclude Include="include\jmorecfg.h" />
     <ClInclude Include="include\jpeglib.h" />
     <ClInclude Include="include\turbojpeg.h" />
-    <ClInclude Include="QR\CoorReader.h" />
+    <ClInclude Include="QR\BarcodeSorter.h" />
     <ClInclude Include="QR\QuadTree.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="RTMPPusher.h" />

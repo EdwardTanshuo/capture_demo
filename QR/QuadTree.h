@@ -50,20 +50,16 @@ namespace tree {
 	 public:
 		int x;
 		int y;
-		int width;
-		int height;
 		Coordinate coor;
 		std::string barcode;
 		
-		TreeNode(int x, int y, int width, int height, std::string barcode): 
+		TreeNode(int x, int y, std::string barcode): 
 		x(x), 
 		y(y), 
-		width(width), 
-		height(height), 
 		barcode(barcode) {
 			std::fill(this->children.begin(), this->children.end(), nullptr);
-			coor.x = float(x) + float(width) / 2.0f;
-			coor.y = float(y) + float(height) / 2.0f;
+			coor.x = float(x);
+			coor.y = float(y);
 			
 			// Add noise to avoid trival vector
 			if (coor.x == 0 && coor.y == 0) {

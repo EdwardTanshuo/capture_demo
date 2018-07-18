@@ -4,8 +4,9 @@
 #include <utility>
 #include <vector>
 
-#include "MultipartParser.h"
 #include "base64.h"
+#include "BarcodeSorter.h"
+#include "MultipartParser.h"
 
 #define AUTH_CODE L"AOah5cKhAxgrd2YrCIYYVqDzFgz539Zn"
 
@@ -31,7 +32,7 @@ pplx::task<web::json::value> InliteClient::post_image_base64(const uri& host, co
 	parser.AddParameter("options", "info");
 	parser.AddParameter("types", "1d,2d");
 	parser.AddParameter("tbr", "101");
-	auto body = parser.GenBodyContent();
+	auto body = std::move(parser.GenBodyContent());
 	
 	request.set_body(body, "multipart/form-data; boundary=" + parser.boundary());
 	request.set_request_uri(U(BASE64_ENDPOINT));
@@ -47,12 +48,18 @@ pplx::task<web::json::value> InliteClient::post_image_base64(const uri& host, co
 		// Handle error cases, for now return empty json value... 
 		return pplx::task_from_result(web::json::value());
 	}).then([](web::json::value json) {
-		auto barcodes = json[L"Barcodes"].as_array();
-		for (auto iter : barcodes) {
-			auto barcode = iter.as_object();
-			auto text = barcode[L"Text"].as_string();
-			auto s = barcode[L"Data"].as_string();
+		auto barcodes_json = json[L"Barcodes"].as_array();
+		std::vector<Barcode> barcodes;
+		for (auto json : barcodes_json) {
+			try {
+				barcodes.push_back(std::move(Barcode(json)));
+			}
+			catch (std::exception e) {
+				continue;
+			}
 		}
+		BarcodeSorter sorter(0.96592582628f, 1000.0f, 6, 10);
+		auto result = sorter.process_barcodes(barcodes);
 		return json;
 	});
 }

@@ -248,7 +248,7 @@
     <ClInclude Include="QR\QuadTree.h">
       <Filter>header\BarcodeSorter</Filter>
     </ClInclude>
-    <ClInclude Include="QR\CoorReader.h">
+    <ClInclude Include="QR\BarcodeSorter.h">
       <Filter>header\BarcodeSorter</Filter>
     </ClInclude>
   </ItemGroup>
