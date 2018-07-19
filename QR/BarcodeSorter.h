@@ -21,8 +21,8 @@ struct Barcode {
 		this->text = value[L"Text"].as_string();
 	}
 
-	tree::TreeNode to_tree_node() {
-		return tree::TreeNode (
+	tree::TreeNode* to_tree_node() {
+		return new tree::TreeNode (
 			(this->left + this->right) / 2, 
 			(this->top + this->bottom) / 2, 
 			std::string(this->text.begin(), this->text.end())
@@ -34,13 +34,15 @@ struct Barcode {
 class BarcodeSorter {
 private:
 	float	_cos_angle;
-	float	_max_distance;
+	float	_max_distance_h;
+	float	_max_distance_v;
 	int		_w;
 	int		_h;
 public:
-	BarcodeSorter(float cos_angle, float max_distance, int w, int h): 
+	BarcodeSorter(float cos_angle, float max_distance_h, float max_distance_v, int w, int h):
 		_cos_angle(cos_angle), 
-		_max_distance(max_distance), 
+		_max_distance_h(max_distance_h), 
+		_max_distance_v(max_distance_v),
 		_w(w), 
 		_h(h) {}
 
@@ -51,13 +53,19 @@ public:
 		std::vector<tree::TreeNode*> nodes;
 		for (auto barcode : barcodes) {
 			auto node = barcode.to_tree_node();
-			nodes.push_back(&node);
+			nodes.push_back(node);
 		}
-		auto temp_array = tree::TreeNode::sort_nodes(nodes, _cos_angle, _max_distance, _w, _h);
+
+		auto temp_array = tree::TreeNode::sort_nodes(nodes, _cos_angle, _max_distance_h, _max_distance_v, _w, _h);
 		std::vector<std::string> result;
 		for (auto iter : temp_array) {
 			result.push_back(iter->barcode);
 		}
+
+		for (auto node : nodes) {
+			delete node;
+		}
+
 		return result;
 	}
 };

@@ -53,13 +53,12 @@ namespace tree {
 		Coordinate coor;
 		std::string barcode;
 		
-		TreeNode(int x, int y, std::string barcode): 
-		x(x), 
-		y(y), 
-		barcode(barcode) {
+		TreeNode(int x, int y, std::string barcode): barcode(barcode) {
 			std::fill(this->children.begin(), this->children.end(), nullptr);
 			coor.x = float(x);
 			coor.y = float(y);
+			this->x = 0;
+			this->y = 0;
 			
 			// Add noise to avoid trival vector
 			if (coor.x == 0 && coor.y == 0) {
@@ -84,17 +83,18 @@ namespace tree {
 			this->children[direction] = new_node;
 		}
 		
-		void insert_child(TreeNode* new_node, bool& flag, float max_cos_angle, float max_dist) {
-			if (is_next_up(this, new_node, max_cos_angle, max_dist)) {
+		void insert_child(TreeNode* new_node, bool& flag, float max_cos_angle, float max_dist_h, float max_dist_v) {
+			if (is_next_up(this, new_node, max_cos_angle, max_dist_v)) {
+				is_next_up(this, new_node, max_cos_angle, max_dist_v);
 				this->children[UP] = new_node;
 				flag = true;
-			} else if (is_next_down(this, new_node, max_cos_angle, max_dist)) {
+			} else if (is_next_down(this, new_node, max_cos_angle, max_dist_v)) {
 				this->children[DOWN] = new_node;
 				flag = true;
-			} else if (is_next_left(this, new_node, max_cos_angle, max_dist)) {
+			} else if (is_next_left(this, new_node, max_cos_angle, max_dist_h)) {
 				this->children[LEFT] = new_node;
 				flag = true;
-			} else if (is_next_right(this, new_node, max_cos_angle, max_dist)) {
+			} else if (is_next_right(this, new_node, max_cos_angle, max_dist_h)) {
 				this->children[RIGHT] = new_node;
 				flag = true;
 			}
@@ -118,30 +118,37 @@ namespace tree {
 		}
 		
 		static bool is_next_up(const TreeNode* from, const TreeNode* to, float max_cos_angle, float max_dist) {
-			return CONS_ANGLE(VEC(from->coor, to->coor), up_unit_vec) <= max_cos_angle 
+			return CONS_ANGLE(VEC(from->coor, to->coor), up_unit_vec) >= max_cos_angle 
 			&& 
 			DIST(from->coor, to->coor) <= max_dist;
 		}
 		
 		static bool is_next_down(const TreeNode* from, const TreeNode* to, float max_cos_angle, float max_dist) {
-			return CONS_ANGLE(VEC(from->coor, to->coor), down_unit_vec) <= max_cos_angle 
+			return CONS_ANGLE(VEC(from->coor, to->coor), down_unit_vec) >= max_cos_angle
 			&& 
 			DIST(from->coor, to->coor) <= max_dist;
 		}
 		
 		static bool is_next_left(const TreeNode* from, const TreeNode* to, float max_cos_angle, float max_dist) {
-			return CONS_ANGLE(VEC(from->coor, to->coor), left_unit_vec) <= max_cos_angle 
+			return CONS_ANGLE(VEC(from->coor, to->coor), left_unit_vec) >= max_cos_angle
 			&& 
 			DIST(from->coor, to->coor) <= max_dist;
 		}
 		
 		static bool is_next_right(const TreeNode* from, const TreeNode* to, float max_cos_angle, float max_dist) {
-			return CONS_ANGLE(VEC(from->coor, to->coor), right_unit_vec) <= max_cos_angle 
+			return CONS_ANGLE(VEC(from->coor, to->coor), right_unit_vec) >= max_cos_angle
 			&& 
 			DIST(from->coor, to->coor) <= max_dist;
 		}
 		
-		static std::vector<TreeNode*> sort_nodes(const std::vector<TreeNode*> nodes, float max_cos_angle, float max_dist, int w, int h);
+		static std::vector<TreeNode*> sort_nodes(
+			std::vector<TreeNode*> nodes, 
+			float max_cos_angle, 
+			float max_dist_h, 
+			float max_dist_v, 
+			int w, 
+			int h
+		);
 		
 	};
 }

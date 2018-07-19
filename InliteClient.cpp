@@ -58,7 +58,7 @@ pplx::task<web::json::value> InliteClient::post_image_base64(const uri& host, co
 				continue;
 			}
 		}
-		BarcodeSorter sorter(0.96592582628f, 1000.0f, 6, 10);
+		BarcodeSorter sorter(0.96592582628f, 1000.0f, 1000.0f, 6, 4);
 		auto result = sorter.process_barcodes(barcodes);
 		return json;
 	});

@@ -3,27 +3,50 @@
 #include <unordered_map>
 #include <utility>
 
+#define MAX_INT 0xffff
+
+bool sort_function(const tree::TreeNode* a, const tree::TreeNode* b) { 
+	if (a->x < b->x) {
+		return true;
+	}
+	else if (a->x == b->x && a->y < b->y) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 namespace tree {	
-	std::vector<TreeNode*> TreeNode::sort_nodes(const std::vector<TreeNode*> nodes, 
+	std::vector<TreeNode*> TreeNode::sort_nodes(std::vector<TreeNode*> nodes, 
 												float max_cos_angle, 
-												float max_dist, 
+												float max_dist_h,
+												float max_dist_v, 
 												int w, 
 												int h) {
-		// gen quad tree
 		int i, j, size = nodes.size();
+		
+		// gen quad tree
 		for (i = 0; i < size; i ++) {
 			for (j = 0; j < size; j ++) {
 				if (i != j) {
 					bool result = false;
-					nodes[i]->insert_child(nodes[j], result, max_cos_angle, max_dist);
+					nodes[i]->insert_child(
+						nodes[j], 
+						result, max_cos_angle, 
+						max_dist_h, 
+						max_dist_v
+					);
 				}
 			}
 		}
 		
-		std::vector<TreeNode*> left_vetex = std::vector<TreeNode*>();
-		std::vector<TreeNode*> top_vetex = std::vector<TreeNode*>();
-		std::unordered_map<TreeNode*, int> m_h;
-		std::unordered_map<TreeNode*, int> m_v;
+		// collections
+		std::vector<TreeNode*> left_vetex;
+		std::vector<TreeNode*> top_vetex;
+		std::vector<TreeNode*> bsd_queue;
+		std::unordered_map<TreeNode*, int> vetex_counter;
+		std::unordered_map<TreeNode*, bool> visited;
 		
 		// left edge
 		for (i = 0; i < size; i ++) {
@@ -41,77 +64,53 @@ namespace tree {
 		}
 		int top_vetex_size = top_vetex.size();
 		
-		// horizontal max lenth
-		std::vector<int> temp_h_len(left_vetex_size);
-		for (i = 0; i < left_vetex_size; i ++) {
-			TreeNode* iter;
-			int temp_len = 0;
-			for (iter = left_vetex[0]; iter != nullptr; iter = iter->children[RIGHT]) {
-				temp_len ++;
+		// find quard tree root
+		left_vetex.insert(left_vetex.end(), top_vetex.begin(), top_vetex.end());
+		tree::TreeNode* root = nullptr;
+		for (auto iter: left_vetex) {
+			if (vetex_counter[iter] == 1) {
+				root = iter;
 			}
-			temp_h_len.push_back(temp_len);
+			vetex_counter[iter] += 1;
 		}
-		int max_h_len = *std::max_element(temp_h_len.begin(), temp_h_len.end());
-		
-		// calculate all the h_index of left edge nodes
-		for (i = 0; i < left_vetex_size; i ++) {
-			TreeNode* iter;
-			int index = 0;
-			for (iter = left_vetex[i]; iter != nullptr; iter = iter->children[RIGHT]) {
-				if (index == 0) {
-					m_h[iter] = max_h_len - temp_h_len[i];
+
+		// bsd 
+		bsd_queue.push_back(root);
+		while (bsd_queue.size() > 0) {
+			std::vector<TreeNode*> next_bsd_queue;
+			while (bsd_queue.size() > 0) {
+				auto node = bsd_queue.back();
+				bsd_queue.pop_back();
+				if (node->children[UP] != nullptr && !visited[node->children[UP]]) {
+					node->children[UP]->x = node->x;
+					node->children[UP]->y = node->y - 1;
+					visited[node->children[UP]] = true;
+					next_bsd_queue.push_back(node->children[UP]);
 				}
-				if (iter->children[RIGHT] != nullptr) {
-					m_h[iter->children[RIGHT]] = m_h[iter] + 1;
+				if (node->children[DOWN] != nullptr && !visited[node->children[DOWN]]) {
+					node->children[DOWN]->x = node->x;
+					node->children[DOWN]->y = node->y + 1;
+					visited[node->children[DOWN]] = true;
+					next_bsd_queue.push_back(node->children[DOWN]);
 				}
-				index ++;
-			}
-		}
-		
-		// vertical max lenth
-		std::vector<int> temp_v_len(top_vetex_size);
-		for (i = 0; i < top_vetex_size; i ++) {
-			TreeNode* iter;
-			int temp_len = 0;
-			for (iter = top_vetex[0]; iter != nullptr; iter = iter->children[DOWN]) {
-				temp_len ++;
-			}
-			temp_v_len.push_back(temp_len);
-		}
-		int max_v_len = *std::max_element(temp_v_len.begin(), temp_v_len.end());
-		
-		// calculate all the v_index of left edge nodes
-		for (i = 0; i < top_vetex_size; i ++) {
-			TreeNode* iter;
-			int index = 0;
-			for (iter = top_vetex[i]; iter != nullptr; iter = iter->children[DOWN]) {
-				if (index == 0) {
-					m_v[iter] = max_v_len - temp_v_len[i];
+				if (node->children[LEFT] != nullptr && !visited[node->children[LEFT]]) {
+					node->children[LEFT]->x = node->x - 1;
+					node->children[LEFT]->y = node->y;
+					visited[node->children[LEFT]] = true;
+					next_bsd_queue.push_back(node->children[LEFT]);
 				}
-				if (iter->children[DOWN] != nullptr) {
-					m_v[iter->children[DOWN]] = m_v[iter] + 1;
-				}
-				index ++;
-			}
-		}
-		
-		// generate the matrix
-		std::vector<std::vector<TreeNode*>> matrix(w, std::vector<TreeNode*>(h, nullptr));
-		for (i = 0; i < size; i ++) {
-			TreeNode* iter = nodes[i];
-			matrix[m_h[iter]][m_v[iter]] = iter;
-		}
-		
-		// generate the result
-		std::vector<TreeNode*> result = std::vector<TreeNode*>();
-		for(i = 0; i < w; i ++) {
-			for(j = 0; j < h; j ++) {
-				if (matrix[i][j] != nullptr) {
-					result.push_back(matrix[i][j]);
+				if (node->children[RIGHT] != nullptr && !visited[node->children[RIGHT]]) {
+					node->children[RIGHT]->x = node->x + 1;
+					node->children[RIGHT]->y = node->y;
+					visited[node->children[RIGHT]] = true;
+					next_bsd_queue.push_back(node->children[RIGHT]);
 				}
 			}
+			bsd_queue = next_bsd_queue;
 		}
-		
-		return result;
+
+		// sort and return
+		std::sort(nodes.begin(), nodes.end(), sort_function);
+		return nodes;
 	}
 }
