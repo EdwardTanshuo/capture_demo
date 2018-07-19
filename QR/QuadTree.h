@@ -51,9 +51,9 @@ namespace tree {
 		int x;
 		int y;
 		Coordinate coor;
-		std::string barcode;
+		std::wstring barcode;
 		
-		TreeNode(int x, int y, std::string barcode): barcode(barcode) {
+		TreeNode(int x, int y, std::wstring barcode): barcode(barcode) {
 			std::fill(this->children.begin(), this->children.end(), nullptr);
 			coor.x = float(x);
 			coor.y = float(y);
@@ -139,6 +139,22 @@ namespace tree {
 			return CONS_ANGLE(VEC(from->coor, to->coor), right_unit_vec) >= max_cos_angle
 			&& 
 			DIST(from->coor, to->coor) <= max_dist;
+		}
+
+		static bool is_up(const TreeNode* from, const TreeNode* to, float max_cos_angle) {
+			return CONS_ANGLE(VEC(from->coor, to->coor), up_unit_vec) >= max_cos_angle;
+		}
+
+		static bool is_down(const TreeNode* from, const TreeNode* to, float max_cos_angle) {
+			return CONS_ANGLE(VEC(from->coor, to->coor), down_unit_vec) >= max_cos_angle;
+		}
+
+		static bool is_left(const TreeNode* from, const TreeNode* to, float max_cos_angle) {
+			return CONS_ANGLE(VEC(from->coor, to->coor), left_unit_vec) >= max_cos_angle;
+		}
+
+		static bool is_right(const TreeNode* from, const TreeNode* to, float max_cos_angle) {
+			return CONS_ANGLE(VEC(from->coor, to->coor), right_unit_vec) >= max_cos_angle;
 		}
 		
 		static std::vector<TreeNode*> sort_nodes(

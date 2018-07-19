@@ -10,14 +10,14 @@
 
 #define AUTH_CODE L"AOah5cKhAxgrd2YrCIYYVqDzFgz539Zn"
 
-pplx::task<web::json::value> InliteClient::post_image(const unsigned char* data, int in_len) {
+pplx::task<std::vector<Barcode>> InliteClient::post_image(const unsigned char* data, int in_len) {
 	uri host(U(INLITE_HOST));
 	std::string base64_str = base64_encode(data, in_len);
 	
 	return this->post_image_base64(host, base64_str);
 }
 
-pplx::task<web::json::value> InliteClient::post_image_base64(const uri& host, const std::string& base64_image) {
+pplx::task<std::vector<Barcode>> InliteClient::post_image_base64(const uri& host, const std::string& base64_image) {
 	// set host
 	init_client(host);
 
@@ -58,8 +58,14 @@ pplx::task<web::json::value> InliteClient::post_image_base64(const uri& host, co
 				continue;
 			}
 		}
-		BarcodeSorter sorter(0.96592582628f, 1000.0f, 1000.0f, 6, 4);
-		auto result = sorter.process_barcodes(barcodes);
-		return json;
+		BarcodeSorter sorter(0.94592582628f, 0, 0, 0, 0);
+		auto sorted_arr = sorter.process_barcodes(barcodes);
+		std::vector<Barcode> result;
+		for (auto iter : sorted_arr) {
+			auto barcode = BarcodeSorter::peek_barcode(barcodes, iter.second);
+			barcode.well = iter.first;
+			result.push_back(barcode);
+		}
+		return result;
 	});
 }

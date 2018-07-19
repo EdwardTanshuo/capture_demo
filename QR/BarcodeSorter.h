@@ -12,6 +12,7 @@ struct Barcode {
 	int bottom;
 
 	std::wstring text;
+	std::string well;
 
 	Barcode(web::json::value& value) throw() {
 		this->left = value[L"Left"].as_integer();
@@ -19,13 +20,14 @@ struct Barcode {
 		this->top = value[L"Top"].as_integer();
 		this->bottom = value[L"Bottom"].as_integer();
 		this->text = value[L"Text"].as_string();
+		this->well = "Unknown";
 	}
 
 	tree::TreeNode* to_tree_node() {
 		return new tree::TreeNode (
 			(this->left + this->right) / 2, 
 			(this->top + this->bottom) / 2, 
-			std::string(this->text.begin(), this->text.end())
+			this->text
 		);
 	}
 };
@@ -49,7 +51,7 @@ public:
 	~BarcodeSorter() {}
 
 public:
-	std::vector<std::string> process_barcodes(std::vector<Barcode> barcodes) {
+	std::vector<std::pair<std::string, std::wstring>> process_barcodes(std::vector<Barcode> barcodes) {
 		std::vector<tree::TreeNode*> nodes;
 		for (auto barcode : barcodes) {
 			auto node = barcode.to_tree_node();
@@ -57,9 +59,12 @@ public:
 		}
 
 		auto temp_array = tree::TreeNode::sort_nodes(nodes, _cos_angle, _max_distance_h, _max_distance_v, _w, _h);
-		std::vector<std::string> result;
+		std::vector<std::pair<std::string, std::wstring>> result;
 		for (auto iter : temp_array) {
-			result.push_back(iter->barcode);
+			char prefix = iter->y + 'A';
+			std::string well;
+			well = well + std::string(1, prefix) + std::to_string(iter->x + 1);
+			result.push_back(std::make_pair(well, iter->barcode));
 		}
 
 		for (auto node : nodes) {
@@ -67,5 +72,13 @@ public:
 		}
 
 		return result;
+	}
+
+	static Barcode peek_barcode(std::vector<Barcode> barcodes, std::wstring text) {
+		for (auto iter : barcodes) {
+			if (iter.text == text) {
+				return iter;
+			}
+		}
 	}
 };

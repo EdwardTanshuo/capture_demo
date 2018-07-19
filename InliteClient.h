@@ -1,5 +1,7 @@
 #pragma once
 
+#include "BarcodeSorter.h"
+
 #include <cpprest/http_client.h>
 #include <cpprest/filestream.h>
 
@@ -23,12 +25,12 @@ public:
 		}
 	};
 
-	pplx::task<web::json::value> post_image(const unsigned char* data, int in_len);
+	pplx::task<std::vector<Barcode>> post_image(const unsigned char* data, int in_len);
 
 private:
 	http_client* _client = nullptr;
 
-	pplx::task<web::json::value> post_image_base64(const uri& host, const std::string& base64_image);
+	pplx::task<std::vector<Barcode>> post_image_base64(const uri& host, const std::string& base64_image);
 
 private:
 	void init_client(const uri &base_uri) {

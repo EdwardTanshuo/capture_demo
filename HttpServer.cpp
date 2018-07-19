@@ -166,6 +166,7 @@ int HttpServer::takePicture() {
 	auto promise = test.post_image((unsigned char*)test_image, sample.size());
 	try {
 		promise.wait();
+		auto result = promise.get();
 	}
 	catch (std::exception e) {
 	
