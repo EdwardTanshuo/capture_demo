@@ -58,7 +58,11 @@ pplx::task<std::vector<Barcode>> InliteClient::post_image_base64(const uri& host
 				continue;
 			}
 		}
-		BarcodeSorter sorter(0.94592582628f, 0, 0, 0, 0);
+		if (barcodes.size() == 0) {
+			return std::vector<Barcode>();
+		}
+
+		BarcodeSorter sorter(0.866, 1000, 1000, 0, 0);
 		auto sorted_arr = sorter.process_barcodes(barcodes);
 		std::vector<Barcode> result;
 		for (auto iter : sorted_arr) {

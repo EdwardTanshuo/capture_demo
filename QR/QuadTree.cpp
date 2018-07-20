@@ -26,7 +26,7 @@ namespace tree {
 												int h) {
 		int i, j, size = nodes.size();
 		
-		// find the min distance in horizontal direction 
+		/*// find the min distance in horizontal direction 
 		int min_h = MAX_INT;
 		for (i = 0; i < size; i++) {
 			for (j = 0; j < size; j++) {
@@ -44,7 +44,7 @@ namespace tree {
 				}
 			}
 		}
-		max_dist_h = 1.2 * (float)min_h;
+		max_dist_h = 1.6 * (float)min_h;
 
 		// find the min distance in vertical direction 
 		int min_v = MAX_INT;
@@ -64,7 +64,7 @@ namespace tree {
 				}
 			}
 		}
-		max_dist_v = 1.2 * (float)min_v;
+		max_dist_v = 1.6 * (float)min_v;*/
 
 		// gen quad tree
 		for (i = 0; i < size; i ++) {

@@ -7,6 +7,8 @@
 #include "CameraEventListener.h"
 #include "CameraModelLegacy.h"
 
+#include "InliteClient.h"
+
 #include "EDSDK.h"
 #include "EDSDKTypes.h"
 
@@ -18,6 +20,9 @@
 #define new DEBUG_NEW
 #endif
 
+#ifndef OUTPUT_NAME
+#define OUTPUT_NAME "temp.jpg"
+#endif
 
 #define WM_USER_DOWNLOAD_COMPLETE		WM_APP+1
 #define WM_USER_PROGRESS_REPORT			WM_APP+2
@@ -366,7 +371,24 @@ void CCameraControlDlg::update(Observable* from, CameraEvent *e) {
 
 
 LRESULT CCameraControlDlg::OnDownloadComplete(WPARAM wParam, LPARAM lParam) {
-	//End of download of image	
+	// read the downloaded image
+	std::ifstream file(OUTPUT_NAME, std::ios::binary | std::ios::ate);
+	std::streamsize size = file.tellg();
+	file.seekg(0, std::ios::beg);
+
+	std::vector<char> buffer(size);
+	file.read(buffer.data(), size);
+
+	// process image
+	InliteClient client;
+	auto promise = client.post_image((const unsigned char*)reinterpret_cast<char*>(buffer.data()), size);
+	try {
+		promise.wait();
+		auto result = promise.get();
+	}
+	catch (std::exception e) {
+
+	}
 	return 0;
 }
 
@@ -392,7 +414,6 @@ void CCameraControlDlg::updateStatus(int type, const char* status) {
 		break;
 	}
 	
-
 }
 
 // Run Control Delegate

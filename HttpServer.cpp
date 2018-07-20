@@ -13,19 +13,6 @@
 
 #define DEFAULT_REQUEST_BUFFER_LEN 2048
 
-static std::vector<char> read_sample_file(const char* path) throw() {
-	std::ifstream file(path, std::ios::binary | std::ios::ate);
-	std::streamsize size = file.tellg();
-	file.seekg(0, std::ios::beg);
-
-	std::vector<char> buffer(size);
-	if (file.read(buffer.data(), size)) {
-		return buffer;
-	}
-	else {
-		throw "Unable to read the file...";
-	}
-}
 
 HttpServer::HttpServer() {
 	int ret = HttpInitialize(
@@ -158,19 +145,6 @@ int HttpServer::takePicture() {
 		_model->release();
 	}
 
-	// test code start here
-	auto sample = read_sample_file("C:\\Users\\stan\\Desktop\\download.jpg");
-	char* test_image = &sample[0];
-
-	InliteClient test;
-	auto promise = test.post_image((unsigned char*)test_image, sample.size());
-	try {
-		promise.wait();
-		auto result = promise.get();
-	}
-	catch (std::exception e) {
-	
-	}
 	return err;
 }
 

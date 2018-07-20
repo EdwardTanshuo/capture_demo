@@ -15,6 +15,8 @@
 
 #pragma once
 
+#define OUTPUT_NAME "temp.jpg"
+
 #include "Command.h"
 #include "CameraEvent.h"
 #include "EDSDK.h"
@@ -60,7 +62,7 @@ public:
 		//Make the file stream at the forwarding destination
 		if(err == EDS_ERR_OK)
 		{	
-			err = EdsCreateFileStream(dirItemInfo.szFileName, kEdsFileCreateDisposition_CreateAlways, kEdsAccess_ReadWrite, &stream);
+			err = EdsCreateFileStream(OUTPUT_NAME, kEdsFileCreateDisposition_CreateAlways, kEdsAccess_ReadWrite, &stream);
 		}	
 
 		//Set Progress
