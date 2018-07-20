@@ -454,10 +454,11 @@ bool CCameraControlDlg::connectCamera(void) {
 	}
 
 	// restart session 
-	_controller->stop();
+	/*_controller->stop();
 	Sleep(500);
 	if (ret == EDS_ERR_OK)
-		_controller->start();
+		_controller->start();*/
+	_controller->start();
 	return true;
 }
 
@@ -486,3 +487,4 @@ bool CCameraControlDlg::stopStreaming(void) {
 	updateStatus(STREAMING_STATUS, "Streaming Status: end");
 	return true;
 }
+

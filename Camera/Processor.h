@@ -4,20 +4,31 @@
 #include "Thread.h"
 #include "Synchronized.h"
 #include "Command.h"
+#include "DownloadEvfCommand.h"
+#include "StartEvfCommand.h"
+#include "EndEvfCommand.h"
+
 
 class Processor: public Thread {
 
 protected:
-	// Whether it is executing it or not?
+	// whether it is executing it or not?
 	bool _running;
-	// Que
-	std::deque<Command*>  _queue;
+	
+	// command queue
+	std::deque<Command*>  _cmd_queue;
 
-	// Command when ending
+	// frame queue
+	std::deque<Command*>  _frame_queue;
+
+	// command when ending
 	Command*	_closeCommand;
 
-	// Synchronized Object
-	Synchronized _syncObject;
+	// synchronized object
+	Synchronized _syncFrameObject;
+
+	// synchronized object
+	Synchronized _syncCmdObject;
 
 
 public:
@@ -25,7 +36,10 @@ public:
 	Processor() : _running(false), _closeCommand(0) {}
 
 	// Destoracta
-	virtual ~Processor() { clear(); }
+	virtual ~Processor() { 
+		clear_cmd(); 
+		clear_frame();
+	}
 
 	// Set command when ending
 	void setCloseCommand(Command* closeCommand) { _closeCommand = closeCommand; }
@@ -42,33 +56,56 @@ public:
 
 
 	void enqueue(Command* command) {
-		_syncObject.lock();
-		_queue.push_back(command);
-		_syncObject.notify();
-		_syncObject.unlock();
+		StartEvfCommand* start_p = dynamic_cast<StartEvfCommand*>(command);
+		DownloadEvfCommand* download_p = dynamic_cast<DownloadEvfCommand*>(command);
+		EndEvfCommand* end_p = dynamic_cast<EndEvfCommand*>(command);
+		if (download_p != nullptr || end_p != nullptr) {
+			_syncFrameObject.lock();
+			_frame_queue.push_back(command);
+			_syncFrameObject.notify();
+			_syncFrameObject.unlock();
+		}
+		else {
+			_syncCmdObject.lock();
+			_cmd_queue.push_back(command);
+			_syncCmdObject.notify();
+			_syncCmdObject.unlock();
+		}
+		
 	}
 
 
 
 	void stop() {
-		_syncObject.lock();
 		_running = false;
-		_syncObject.unlock();
 		//resume();
 	}
 
 
-	void clear() {
-		_syncObject.lock();
+	void clear_cmd() {
+		_syncCmdObject.lock();
 
-		std::deque<Command*>::iterator it = _queue.begin();
-		while (it != _queue.end()) {
+		std::deque<Command*>::iterator it = _cmd_queue.begin();
+		while (it != _cmd_queue.end()) {
 			delete (*it);
 			++it;
 		}
-		_queue.clear();
+		_cmd_queue.clear();
 
-		_syncObject.unlock();
+		_syncCmdObject.unlock();
+	}
+
+	void clear_frame() {
+		_syncFrameObject.lock();
+
+		std::deque<Command*>::iterator it = _frame_queue.begin();
+		while (it != _frame_queue.end()) {
+			delete (*it);
+			++it;
+		}
+		_frame_queue.clear();
+
+		_syncFrameObject.unlock();
 	}
 
 
@@ -82,11 +119,27 @@ public:
 		while (_running) {
 			Sleep(1);
 
-			Command* command = take();
-			if (command != nullptr && command->getCameraModel() != nullptr) {
-				bool complete = command->execute();
+			Command* command = take_cmd();
+			Command* frame = take_frame();
+			if (frame != nullptr && frame->getCameraModel() != nullptr) {
+				bool complete = frame->execute();
 
 				if (complete == false) {
+					//If commands that were issued fail ( because of DeviceBusy or other reasons )
+					// and retry is required , note that some cameras may become unstable if multiple 
+					// commands are issued in succession without an intervening interval.
+					//Thus, leave an interval of about 20 ms before commands are reissued.
+					Sleep(20);
+					enqueue(frame);
+				}
+				else {
+					delete frame;
+				}
+			}
+
+			if (command != nullptr && command->getCameraModel() != nullptr) {
+				bool complete = command->execute();
+				if (complete == false && dynamic_cast<StartEvfCommand*>(command)) {
 					//If commands that were issued fail ( because of DeviceBusy or other reasons )
 					// and retry is required , note that some cameras may become unstable if multiple 
 					// commands are issued in succession without an intervening interval.
@@ -101,7 +154,10 @@ public:
 		}
 
 		// Clear que
-		clear();
+		clear_cmd();
+
+		// Clear que
+		clear_frame();
 
 		// Command of end
 		if (_closeCommand != NULL) {
@@ -152,32 +208,53 @@ protected:
 	}*/
 
 
-	Command* take() {
+	Command* take_cmd() {
 
 		Command* command = NULL;
 
-		_syncObject.lock();
+		_syncCmdObject.lock();
 
 		// Que stands by between emptiness.
-		while (_queue.empty() && _running) {
-			_syncObject.wait(10);
+		while (_cmd_queue.empty() && _running) {
+			_syncCmdObject.wait(10);
 		}
 
 		if (_running) {
-			command = _queue.front();
-			_queue.pop_front();
+			command = _cmd_queue.front();
+			_cmd_queue.pop_front();
 		}
 
-		_syncObject.unlock();
+		_syncCmdObject.unlock();
+
+		return command;
+	}
+
+	Command* take_frame() {
+
+		Command* command = NULL;
+
+		_syncFrameObject.lock();
+
+		// Que stands by between emptiness.
+		if (_frame_queue.empty()) {
+			return command;
+		}
+
+		if (_running) {
+			command = _frame_queue.front();
+			_frame_queue.pop_front();
+		}
+
+		_syncFrameObject.unlock();
 
 		return command;
 	}
 
 
-	bool isEmpty() {
-		_syncObject.lock();
-		bool ret = _queue.empty();
-		_syncObject.unlock();
+	bool cmdIsEmpty() {
+		_syncCmdObject.lock();
+		bool ret = _cmd_queue.empty();
+		_syncCmdObject.unlock();
 
 		return ret;
 	}

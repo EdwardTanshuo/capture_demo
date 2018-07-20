@@ -17,6 +17,7 @@ public:
 
 		switch (inEvent) {
 		case kEdsObjectEvent_DirItemRequestTransfer:
+			
 			fireEvent(controller, "download", inRef);
 			break;
 
