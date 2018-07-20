@@ -4,9 +4,7 @@
 #include "Thread.h"
 #include "Synchronized.h"
 #include "Command.h"
-#include "DownloadEvfCommand.h"
-#include "StartEvfCommand.h"
-#include "EndEvfCommand.h"
+#include "DownloadCommand.h"
 
 
 class Processor: public Thread {
@@ -56,20 +54,18 @@ public:
 
 
 	void enqueue(Command* command) {
-		StartEvfCommand* start_p = dynamic_cast<StartEvfCommand*>(command);
-		DownloadEvfCommand* download_p = dynamic_cast<DownloadEvfCommand*>(command);
-		EndEvfCommand* end_p = dynamic_cast<EndEvfCommand*>(command);
-		if (download_p != nullptr || end_p != nullptr) {
-			_syncFrameObject.lock();
-			_frame_queue.push_back(command);
-			_syncFrameObject.notify();
-			_syncFrameObject.unlock();
-		}
-		else {
+		DownloadCommand* download_p = dynamic_cast<DownloadCommand*>(command);
+		if (download_p != nullptr) {
 			_syncCmdObject.lock();
 			_cmd_queue.push_back(command);
 			_syncCmdObject.notify();
 			_syncCmdObject.unlock();
+		}
+		else {
+			_syncFrameObject.lock();
+			_frame_queue.push_back(command);
+			_syncFrameObject.notify();
+			_syncFrameObject.unlock();
 		}
 		
 	}
@@ -139,17 +135,7 @@ public:
 
 			if (command != nullptr && command->getCameraModel() != nullptr) {
 				bool complete = command->execute();
-				if (complete == false && dynamic_cast<StartEvfCommand*>(command)) {
-					//If commands that were issued fail ( because of DeviceBusy or other reasons )
-					// and retry is required , note that some cameras may become unstable if multiple 
-					// commands are issued in succession without an intervening interval.
-					//Thus, leave an interval of about 20 ms before commands are reissued.
-					Sleep(20);
-					enqueue(command);
-				}
-				else {
-					delete command;
-				}
+				delete command;
 			}
 		}
 
@@ -215,8 +201,9 @@ protected:
 		_syncCmdObject.lock();
 
 		// Que stands by between emptiness.
-		while (_cmd_queue.empty() && _running) {
-			_syncCmdObject.wait(10);
+		if (_cmd_queue.empty()) {
+			_syncCmdObject.unlock();
+			return command;
 		}
 
 		if (_running) {
@@ -237,9 +224,10 @@ protected:
 
 		// Que stands by between emptiness.
 		if (_frame_queue.empty()) {
+			_syncFrameObject.unlock();
 			return command;
 		}
-
+		
 		if (_running) {
 			command = _frame_queue.front();
 			_frame_queue.pop_front();
