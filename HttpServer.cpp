@@ -141,6 +141,10 @@ int HttpServer::takePicture() {
 		_model->retain();
 		//Taking a picture
 		err = EdsSendCommand(_model->getCameraObject(), kEdsCameraCommand_PressShutterButton, kEdsCameraCommand_ShutterButton_Completely);
+		if (err != EDS_ERR_OK) {
+			_model->release();
+			return err;
+		}
 		err = EdsSendCommand(_model->getCameraObject(), kEdsCameraCommand_PressShutterButton, kEdsCameraCommand_ShutterButton_OFF);
 		_model->release();
 	}
