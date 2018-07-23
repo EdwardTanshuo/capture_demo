@@ -36,8 +36,13 @@ public:
 		bool	 locked = false;
 	
 		//The communication with the camera begins
-		err = EdsOpenSession(_model->getCameraObject());
-	
+		try {
+			err = EdsOpenSession(_model->getCameraObject());
+		}
+		catch (std::exception e) {
+		
+		}
+		
 
 		//Preservation ahead is set to PC
 		if(err == EDS_ERR_OK)

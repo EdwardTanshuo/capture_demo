@@ -199,7 +199,7 @@ void CCameraControlDlg::release_camera() {
 	}
 
 	if (_model != nullptr) {
-		_model->release();
+		//_model->release();
 		_model = nullptr;
 	}
 

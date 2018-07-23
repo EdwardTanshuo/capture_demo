@@ -50,17 +50,19 @@ public:
 		_syncObject.lock();
 		_ref_counter--;
 		if (_ref_counter <= 0) {
-			_syncObject.unlock();
 			delete this;
-			return;
 		}
-		_syncObject.unlock();
+		else {
+			_syncObject.unlock();
+			_syncObject.notify();
+		}
 	};
 
 	void retain() {
 		_syncObject.lock();
 		_ref_counter++;
 		_syncObject.unlock();
+		_syncObject.notify();
 	};
 
 	// Constructor

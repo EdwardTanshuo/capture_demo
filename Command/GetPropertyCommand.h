@@ -86,11 +86,17 @@ private:
 		//Acquisition of the property size
 		if(err == EDS_ERR_OK)
 		{
-			err = EdsGetPropertySize( _model->getCameraObject(),
-									  propertyID,
-									  0,
-									  &dataType,
-									  &dataSize );
+			try {
+				err = EdsGetPropertySize(_model->getCameraObject(),
+					propertyID,
+					0,
+					&dataType,
+					&dataSize);
+			}
+			catch (std::exception e) {
+			
+			}
+			
 		}
 
 		if(err == EDS_ERR_OK)

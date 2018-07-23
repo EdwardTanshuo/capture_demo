@@ -34,6 +34,7 @@ public:
 			_observers.push_back(ob);
 		}
 		_syncObject.unlock();
+		_syncObject.notify();
 	}
 
 	// Deletion of Observer
@@ -44,28 +45,32 @@ public:
 			_observers.erase(i);
 		}
 		_syncObject.unlock();
+		_syncObject.notify();
 	}
 
 	// It notifies Observer
 	void notifyObservers(CameraEvent *e = NULL) {
 		_syncObject.lock();
-		std::vector<Observer*>::reverse_iterator i = _observers.rbegin();
-		while (i != _observers.rend()) {
-			(*i++)->update(this, e);
+		for (auto observer: _observers) {
+			observer->update(this, e);
 		}
+		
 		_syncObject.unlock();
+		_syncObject.notify();
 	}
 
 	void deleteObservers() {
 		_syncObject.lock();
 		_observers.clear();
 		_syncObject.unlock();
+		_syncObject.notify();
 	}
 	
 	int countObservers() { 
 		_syncObject.lock();
 		int result =  (int)_observers.size(); 
 		_syncObject.unlock();
+		_syncObject.notify();
 		return result;
 	}
 
