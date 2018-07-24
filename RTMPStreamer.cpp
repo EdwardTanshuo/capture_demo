@@ -16,7 +16,7 @@ extern "C"
 #define DEFAULT_WIDTH	960
 #define DEFAULT_HEIGHT	640
 #define DEFAULT_RATE	800 * 1024
-#define DEFAULT_URL		"rtmp://127.0.0.1:1935/live/test"
+#define DEFAULT_URL		"rtmp://127.0.0.1:1935/show/test"
 
 static tjhandle _jpegDecompressor = nullptr;
 

@@ -159,7 +159,7 @@ public:
 
 
 		if (command == "start") {
-			bool ret = _delegate->connectCamera() && _delegate->startStreaming();
+			bool ret = _delegate->connectCamera();
 
 			if (ret) {
 				StoreAsync(new StartEvfCommand(_model));

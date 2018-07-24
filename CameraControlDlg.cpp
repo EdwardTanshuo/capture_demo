@@ -277,6 +277,8 @@ BOOL CCameraControlDlg::OnInitDialog() {
 		char buffer[200];
 		sprintf(buffer, "Server Status: listen on [ %s ]", HTTP_URL);
 		updateStatus(SERVER_STATUS, buffer);
+
+		this->startStreaming();
 	}
 	catch (HttpException e) {
 		::MessageBox(NULL, "Cannot setup http server", NULL, MB_OK);
