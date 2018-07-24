@@ -62,7 +62,7 @@ pplx::task<std::vector<Barcode>> InliteClient::post_image_base64(const uri& host
 			return std::vector<Barcode>();
 		}
 
-		BarcodeSorter sorter(0.866, 1000, 1000, 0, 0);
+		BarcodeSorter sorter(0.866, 1500, 1500, 0, 0);
 		auto sorted_arr = sorter.process_barcodes(barcodes);
 		std::vector<Barcode> result;
 		for (auto iter : sorted_arr) {

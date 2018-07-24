@@ -161,9 +161,6 @@
     <ClInclude Include="Camera\CameraEvent.h">
       <Filter>header\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Camera\CameraEventListener.h">
-      <Filter>header\Camera</Filter>
-    </ClInclude>
     <ClInclude Include="Camera\CameraModel.h">
       <Filter>header\Camera</Filter>
     </ClInclude>
@@ -250,6 +247,9 @@
     </ClInclude>
     <ClInclude Include="QR\BarcodeSorter.h">
       <Filter>header\BarcodeSorter</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera\CameraEventListener.h">
+      <Filter>header\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

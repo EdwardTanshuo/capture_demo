@@ -33,6 +33,10 @@ public:
 		}
 	}
 
+	HANDLE handle() const {
+		return this->_hThread;
+	}
+
 	/*
 	void resume() const
 	{

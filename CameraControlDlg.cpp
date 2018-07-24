@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include <map>
+#include <windows.h>
+#include <process.h>
 
 #include "CameraControl.h"
 #include "CameraControlDlg.h"
@@ -42,6 +44,28 @@ static CameraModel* cameraModelFactory(EdsCameraRef camera, EdsDeviceInfo device
 
 	// PTP protocol.
 	return new CameraModel(camera);
+}
+
+static void process_image(void* lParam) {
+	// read the downloaded image
+	std::ifstream file(OUTPUT_NAME, std::ios::binary | std::ios::ate);
+	std::streamsize size = file.tellg();
+	file.seekg(0, std::ios::beg);
+
+	std::vector<char> buffer(size);
+	file.read(buffer.data(), size);
+
+	// process image
+	InliteClient client;
+	auto promise = client.post_image((const unsigned char*)reinterpret_cast<char*>(buffer.data()), size);
+	try {
+		promise.wait();
+		auto result = promise.get();
+	}
+	catch (std::exception e) {
+		
+	}
+	_endthread();
 }
 
 
@@ -199,7 +223,7 @@ void CCameraControlDlg::release_camera() {
 	}
 
 	if (_model != nullptr) {
-		//_model->release();
+		_model->release();
 		_model = nullptr;
 	}
 
@@ -371,24 +395,7 @@ void CCameraControlDlg::update(Observable* from, CameraEvent *e) {
 
 
 LRESULT CCameraControlDlg::OnDownloadComplete(WPARAM wParam, LPARAM lParam) {
-	// read the downloaded image
-	std::ifstream file(OUTPUT_NAME, std::ios::binary | std::ios::ate);
-	std::streamsize size = file.tellg();
-	file.seekg(0, std::ios::beg);
-
-	std::vector<char> buffer(size);
-	file.read(buffer.data(), size);
-
-	// process image
-	InliteClient client;
-	auto promise = client.post_image((const unsigned char*)reinterpret_cast<char*>(buffer.data()), size);
-	try {
-		promise.wait();
-		auto result = promise.get();
-	}
-	catch (std::exception e) {
-
-	}
+	auto _hThread = (HANDLE)_beginthread(process_image, 0, this);
 	return 0;
 }
 
