@@ -71,7 +71,7 @@ static void process_image(void* lParam) {
 
 int CCameraControlDlg::init_camera() {
 	if (_model != nullptr) {
-		release_camera();
+		return EDS_ERR_OK;
 	}
 
 	EdsError	 err = EDS_ERR_OK;
