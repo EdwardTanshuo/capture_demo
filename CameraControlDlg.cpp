@@ -47,7 +47,7 @@ static CameraModel* cameraModelFactory(EdsCameraRef camera, EdsDeviceInfo device
 }
 
 static void process_image(void* lParam) {
-	// read the downloaded image
+	// read the downloaded image	
 	std::ifstream file(OUTPUT_NAME, std::ios::binary | std::ios::ate);
 	std::streamsize size = file.tellg();
 	file.seekg(0, std::ios::beg);
