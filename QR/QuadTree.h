@@ -20,7 +20,7 @@
 
 #define PROJ(coor_a, coor_b) INNER_PRODUCT((coor_a),(coor_b))/NORM((coor_b))
 
-#define CONS_ANGLE(coor_a, coor_b) INNER_PRODUCT((coor_a),(coor_b))/NORM((coor_a))/NORM((coor_b))
+#define COS_ANGLE(coor_a, coor_b) INNER_PRODUCT((coor_a),(coor_b))/NORM((coor_a))/NORM((coor_b))
 
 namespace tree {
 	struct TreeNode;
@@ -114,47 +114,47 @@ namespace tree {
 		}
 		
 		static float consine_angle(Coordinate a, Coordinate b) {
-			return CONS_ANGLE(a, b);
+			return COS_ANGLE(a, b);
 		}
 		
 		static bool is_next_up(const TreeNode* from, const TreeNode* to, float max_cos_angle, float max_dist) {
-			return CONS_ANGLE(VEC(from->coor, to->coor), up_unit_vec) >= max_cos_angle 
+			return COS_ANGLE(VEC(from->coor, to->coor), up_unit_vec) >= max_cos_angle
 			&& 
 			DIST(from->coor, to->coor) <= max_dist;
 		}
 		
 		static bool is_next_down(const TreeNode* from, const TreeNode* to, float max_cos_angle, float max_dist) {
-			return CONS_ANGLE(VEC(from->coor, to->coor), down_unit_vec) >= max_cos_angle
+			return COS_ANGLE(VEC(from->coor, to->coor), down_unit_vec) >= max_cos_angle
 			&& 
 			DIST(from->coor, to->coor) <= max_dist;
 		}
 		
 		static bool is_next_left(const TreeNode* from, const TreeNode* to, float max_cos_angle, float max_dist) {
-			return CONS_ANGLE(VEC(from->coor, to->coor), left_unit_vec) >= max_cos_angle
+			return COS_ANGLE(VEC(from->coor, to->coor), left_unit_vec) >= max_cos_angle
 			&& 
 			DIST(from->coor, to->coor) <= max_dist;
 		}
 		
 		static bool is_next_right(const TreeNode* from, const TreeNode* to, float max_cos_angle, float max_dist) {
-			return CONS_ANGLE(VEC(from->coor, to->coor), right_unit_vec) >= max_cos_angle
+			return COS_ANGLE(VEC(from->coor, to->coor), right_unit_vec) >= max_cos_angle
 			&& 
 			DIST(from->coor, to->coor) <= max_dist;
 		}
 
 		static bool is_up(const TreeNode* from, const TreeNode* to, float max_cos_angle) {
-			return CONS_ANGLE(VEC(from->coor, to->coor), up_unit_vec) >= max_cos_angle;
+			return COS_ANGLE(VEC(from->coor, to->coor), up_unit_vec) >= max_cos_angle;
 		}
 
 		static bool is_down(const TreeNode* from, const TreeNode* to, float max_cos_angle) {
-			return CONS_ANGLE(VEC(from->coor, to->coor), down_unit_vec) >= max_cos_angle;
+			return COS_ANGLE(VEC(from->coor, to->coor), down_unit_vec) >= max_cos_angle;
 		}
 
 		static bool is_left(const TreeNode* from, const TreeNode* to, float max_cos_angle) {
-			return CONS_ANGLE(VEC(from->coor, to->coor), left_unit_vec) >= max_cos_angle;
+			return COS_ANGLE(VEC(from->coor, to->coor), left_unit_vec) >= max_cos_angle;
 		}
 
 		static bool is_right(const TreeNode* from, const TreeNode* to, float max_cos_angle) {
-			return CONS_ANGLE(VEC(from->coor, to->coor), right_unit_vec) >= max_cos_angle;
+			return COS_ANGLE(VEC(from->coor, to->coor), right_unit_vec) >= max_cos_angle;
 		}
 		
 		static std::vector<TreeNode*> sort_nodes(
