@@ -49,6 +49,9 @@
     <Filter Include="header\BarcodeSorter">
       <UniqueIdentifier>{0bedee7d-4b02-4448-a71d-5490a2e53eca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="header\FlimClient">
+      <UniqueIdentifier>{585bed44-60d5-4345-92a3-35fc72ca76db}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ActionButton.cpp">
@@ -85,6 +88,9 @@
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="QR\QuadTree.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="FlimClient.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -250,6 +256,9 @@
     </ClInclude>
     <ClInclude Include="Camera\CameraEventListener.h">
       <Filter>header\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="FlimClient.h">
+      <Filter>header\FlimClient</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
