@@ -93,6 +93,9 @@
     <ClCompile Include="FlimClient.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="InliteCOMClient.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActionButton.h">
@@ -259,6 +262,9 @@
     </ClInclude>
     <ClInclude Include="FlimClient.h">
       <Filter>header\FlimClient</Filter>
+    </ClInclude>
+    <ClInclude Include="InliteCOMClient.h">
+      <Filter>header\InliteClient</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -10,6 +10,7 @@
 #include "CameraModelLegacy.h"
 
 #include "InliteClient.h"
+#include "InliteCOMClient.h"
 
 #include "EDSDK.h"
 #include "EDSDKTypes.h"
@@ -46,7 +47,9 @@ static CameraModel* cameraModelFactory(EdsCameraRef camera, EdsDeviceInfo device
 	return new CameraModel(camera);
 }
 
+// process image
 static void process_image(void* lParam) {
+#ifdef WEB_SERVER_API
 	// read the downloaded image	
 	std::ifstream file(OUTPUT_NAME, std::ios::binary | std::ios::ate);
 	std::streamsize size = file.tellg();
@@ -54,8 +57,6 @@ static void process_image(void* lParam) {
 
 	std::vector<char> buffer(size);
 	file.read(buffer.data(), size);
-
-	// process image
 	InliteClient client;
 	auto promise = client.post_image((const unsigned char*)reinterpret_cast<char*>(buffer.data()), size);
 	try {
@@ -65,6 +66,11 @@ static void process_image(void* lParam) {
 	catch (std::exception e) {
 		
 	}
+#else
+	InliteCOMClient client;
+	auto result = client.post_image((const unsigned char*)OUTPUT_NAME);
+#endif
+
 	_endthread();
 }
 

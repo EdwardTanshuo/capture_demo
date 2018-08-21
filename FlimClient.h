@@ -5,7 +5,7 @@
 #include "BarcodeSorter.h"
 
 #define ENDPOINT	"/notify"
-#define FLIM_HOST	"http://10.100.100.144:80"
+#define FLIM_HOST	"http://127.0.0.1:80"
 
 using namespace web::http;
 using namespace web::http::client;

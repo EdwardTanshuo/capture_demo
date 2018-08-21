@@ -28,7 +28,7 @@ pplx::task<web::json::value> FlimClient::notify_flim(std::vector<Barcode> barcod
 	
 	auto body = std::move(web::json::value::array(temp_arr));
 
-	// start request
+	// TODO: this is for test
 	return _client->request(web::http::methods::POST, U(ENDPOINT), body).then([](http_response response) {
 		auto bodyStream = response.body();
 		

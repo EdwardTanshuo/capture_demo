@@ -23,6 +23,15 @@ struct Barcode {
 		this->well = "Unknown";
 	}
 
+	Barcode(int left, int right, int top, int bottom, std::wstring text) {
+		this->left = left;
+		this->right = right;
+		this->top = top;
+		this->bottom = bottom;
+		this->text = text;
+		this->well = "Unknown";
+	}
+
 	tree::TreeNode* to_tree_node() {
 		return new tree::TreeNode (
 			(this->left + this->right) / 2, 
