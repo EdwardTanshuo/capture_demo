@@ -67,8 +67,10 @@ static void process_image(void* lParam) {
 		
 	}
 #else
+	CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 	InliteCOMClient client;
 	auto result = client.post_image((const unsigned char*)OUTPUT_NAME);
+	CoUninitialize();
 #endif
 
 	_endthread();

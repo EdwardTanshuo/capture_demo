@@ -4,7 +4,8 @@ std::vector<Barcode> InliteCOMClient::post_image(const unsigned char* image_path
 	std::vector<Barcode> result;
 
 	ICiQRPtr reader = _server->CreateQR();
-	reader->Image->Open(_bstr_t(image_path), 1);
+	auto path_b_str = _bstr_t((const char*)image_path);
+	reader->Image->Open(path_b_str, 1);
 	reader->Find(0);
 	
 	for (int i = 1; i <= reader->Barcodes->Count; i ++) {
