@@ -4,8 +4,8 @@
 #include <vector>
 #include "BarcodeSorter.h"
 
-#define ENDPOINT	"/notify"
-#define FLIM_HOST	"http://127.0.0.1:80"
+#define ENDPOINT	"/captureResults"
+#define FLIM_HOST	"http://localhost:5000/"
 
 using namespace web::http;
 using namespace web::http::client;
@@ -19,8 +19,12 @@ public:
 			_client = nullptr;
 		}
 	};
+	
+	web::json::value barcodes2json(std::vector<Barcode> barcodes);
 
-	pplx::task<web::json::value> notify_flim(std::vector<Barcode> barcodes);
+	web::json::value constructCaptureResults(web::json::value barcodes, const std::string& base64_image);
+
+	pplx::task<web::json::value> notify_flim(web::json::value body);
 
 private:
 	http_client * _client = nullptr;

@@ -13,6 +13,9 @@
 
 #define DEFAULT_REQUEST_BUFFER_LEN 2048
 
+#define CAPTURE_API L"/labelCaptureModule/capture"
+#define CONNECT_API L"/labelCaptureModule/connect"
+#define DISCONNECT_API L"/labelCaptureModule/disconnect"
 
 HttpServer::HttpServer() {
 	int ret = HttpInitialize(
@@ -86,27 +89,34 @@ DWORD HttpServer::poll() {
 	if (result == NO_ERROR) {
 		switch (_request->Verb) {
 		case HttpVerbGET:
-			query = std::wstring(_request->CookedUrl.pQueryString);
+			wprintf(L"Got a GET request for %ws \n", _request->CookedUrl.pFullUrl);
+			query = _request->CookedUrl.pAbsPath;
+			if (query.compare(CAPTURE_API) == 0) {
+				// take picture
+				dev_ret = takePicture();
+
+							// process image
+							//list = _client.post_image_base64(U(INLITE_URL), L"").wait();
+
+				char timestamp[200];
+				char json[1024];
+				gen_timestamp(timestamp);
+				gen_json(json, timestamp, dev_ret);
+				result = SendHttpResponse(_request->RequestId, 200, "OK", json);
+			}// else if (query.compare(CONNECT_API) == 0) {
+			//} else if (query.compare(DISCONNECT_API) == 0) {
+			//}
+			else {
+               result = SendHttpResponse(_request->RequestId, 503, "Not Implemented", nullptr);
+			}
 			
-			// take picture
-			dev_ret = takePicture();
-
-			// process image
-			//list = _client.post_image_base64(U(INLITE_URL), L"").wait();
-
-			char timestamp[200];
-			char json[1024];
-			gen_timestamp(timestamp);
-			gen_json(json, timestamp, dev_ret);
-			result = SendHttpResponse(_request->RequestId, 200, "OK", json);
 			break;
-
 		case HttpVerbPOST:
-			result = SendHttpResponse(_request->RequestId, 500, "bad request", nullptr);
-			break;
-
 		default:
-			result = SendHttpResponse(_request->RequestId, 500, "bad request", nullptr);
+			wprintf(L"Got a unknown request for %ws \n",
+				_request->CookedUrl.pFullUrl);
+			result = SendHttpResponse(_request->RequestId, 503, "Not Implemented", nullptr);
+			break;
 		}
 
 		if (result != NO_ERROR) {
@@ -163,6 +173,7 @@ DWORD HttpServer::SendHttpResponse(IN HTTP_REQUEST_ID request_id, IN USHORT code
 
 	// add a known header.
 	add_known_header(&response, HttpHeaderContentType, "application/json");
+	add_unknown_header(&response, "Access-Control-Allow-Origin", "*");
 
 	// add an entity chunk.
 	if (entity) {

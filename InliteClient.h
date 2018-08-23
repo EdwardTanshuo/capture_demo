@@ -25,7 +25,9 @@ public:
 		}
 	};
 
-	pplx::task<std::vector<Barcode>> post_image(const unsigned char* data, int in_len);
+	//pplx::task<std::vector<Barcode>> post_image(const unsigned char* data, int in_len);
+	pplx::task<std::vector<Barcode>> post_image(const std::string& base64_str);
+
 
 private:
 	http_client* _client = nullptr;

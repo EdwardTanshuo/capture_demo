@@ -10,7 +10,7 @@ public:
 
 	~InliteCOMClient() {}
 
-	std::vector<Barcode> post_image(const unsigned char* image_path);
+	std::vector<Barcode> post_image(const char* image_path);
 
 private:
 	ICiServerPtr _server;

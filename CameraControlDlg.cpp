@@ -11,6 +11,7 @@
 
 #include "InliteClient.h"
 #include "InliteCOMClient.h"
+#include "FlimClient.h"
 
 #include "EDSDK.h"
 #include "EDSDKTypes.h"
@@ -18,6 +19,8 @@
 #include "Config.h"
 
 #include "HttpException.h"
+
+#include "base64.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -47,29 +50,60 @@ static CameraModel* cameraModelFactory(EdsCameraRef camera, EdsDeviceInfo device
 	return new CameraModel(camera);
 }
 
-// process image
-static void process_image(void* lParam) {
-#ifdef WEB_SERVER_API
-	// read the downloaded image	
+static std::string loadImageAsBase64(const char *filename) {
+	// read the downloaded image
 	std::ifstream file(OUTPUT_NAME, std::ios::binary | std::ios::ate);
 	std::streamsize size = file.tellg();
 	file.seekg(0, std::ios::beg);
 
 	std::vector<char> buffer(size);
 	file.read(buffer.data(), size);
+	return base64_encode((const unsigned char*)reinterpret_cast<char*>(buffer.data()), size);
+}
+
+static std::vector<Barcode> sortBarcodes(std::vector<Barcode> barcodes) {
+	BarcodeSorter sorter(0.866, 1400, 1400, 0, 0);
+	auto sorted_arr = sorter.process_barcodes(barcodes);
+	std::vector<Barcode> result;
+	for (auto iter : sorted_arr) {
+		auto barcode = BarcodeSorter::peek_barcode(barcodes, iter.second);
+		barcode.well = iter.first;
+		result.push_back(barcode);
+	}
+	return result;
+}
+
+// process image
+static void process_image(void* lParam) {
+	std::string base64_image = loadImageAsBase64(OUTPUT_NAME);
+
+#ifdef WEB_SERVER_API
 	InliteClient client;
-	auto promise = client.post_image((const unsigned char*)reinterpret_cast<char*>(buffer.data()), size);
+	auto promise = client.post_image(base64_image);
 	try {
 		promise.wait();
-		auto result = promise.get();
+		auto result = sortBarcodes(promise.get());
 	}
 	catch (std::exception e) {
 		
 	}
 #else
 	InliteCOMClient client;
-	auto result = client.post_image((const unsigned char*)OUTPUT_NAME);
+	auto result = sortBarcodes(client.post_image((const char*)OUTPUT_NAME));
 #endif
+
+	FlimClient	flimsClient;
+	auto barcodes = flimsClient.barcodes2json(result);
+	auto body = flimsClient.constructCaptureResults(barcodes, base64_image);
+	auto strBody = body.serialize();
+	//::MessageBoxW(NULL, strBody.c_str(), L"barcodes", MB_OK);
+	auto flimsRspPromise = flimsClient.notify_flim(body);
+	flimsRspPromise.wait();
+	auto flimsRsp = flimsRspPromise.get();
+	//::MessageBoxW(NULL, flimsRsp.serialize().c_str(), L"flims response" , MB_OK);
+	/*char buffer[1024];
+	sprintf(buffer, "Device Status: connected: [ %s ]", "Ready");
+	updateStatus(DEVICE_STATUS, buffer);*/
 
 	_endthread();
 }

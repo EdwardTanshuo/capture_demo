@@ -61,6 +61,16 @@ protected:
 		resp->Headers.KnownHeaders[type].pRawValue = (content);
 		resp->Headers.KnownHeaders[type].RawValueLength = (USHORT)strlen(content);
 	}
+
+	void add_unknown_header(HTTP_RESPONSE* resp, PSTR name, PSTR content) {
+		auto unknownHeader = new HTTP_UNKNOWN_HEADER;
+		unknownHeader->NameLength = (USHORT)strlen(name);
+		unknownHeader->RawValueLength = (USHORT)strlen(content);
+		unknownHeader->pName = name;
+		unknownHeader->pRawValue = content;
+		resp->Headers.pUnknownHeaders = unknownHeader;
+		resp->Headers.UnknownHeaderCount = 1;
+	}
 	
 	void gen_timestamp(char* buffer) {
 		time_t timer;
