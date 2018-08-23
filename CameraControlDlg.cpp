@@ -88,8 +88,10 @@ static void process_image(void* lParam) {
 		
 	}
 #else
+	CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 	InliteCOMClient client;
 	auto result = sortBarcodes(client.post_image((const char*)OUTPUT_NAME));
+	CoUninitialize();
 #endif
 
 	FlimClient	flimsClient;
