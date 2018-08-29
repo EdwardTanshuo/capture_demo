@@ -6,13 +6,13 @@
 class CActionButton : public CButton, public ActionSource {
 
 public:
-	CActionButton();
+    CActionButton();
 
 public:
-	virtual ~CActionButton();
+    virtual ~CActionButton();
 
 protected:
-	void OnClicked();
-	DECLARE_MESSAGE_MAP()
+    void OnClicked();
+    DECLARE_MESSAGE_MAP()
 };
 

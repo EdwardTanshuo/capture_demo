@@ -12,9 +12,9 @@
 #define IDC_BUTTON2                     1013
 #define IDC_BUTTON3                     1014
 #define IDC_PICT                        1022
-#define IDC_TEXT1						1023
-#define IDC_TEXT2						1024
-#define IDC_TEXT3						1025
+#define IDC_TEXT1                       1023
+#define IDC_TEXT2                       1024
+#define IDC_TEXT3                       1025
 
 // Next default values for new objects
 // 

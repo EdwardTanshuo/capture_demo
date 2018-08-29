@@ -17,25 +17,25 @@
 
 class CCameraControlApp : public CWinApp {
 public:
-	CCameraControlApp();
+    CCameraControlApp();
 
-	Displayer				_displayer;
-	RTMPPusher				_pusher;
+    Displayer				_displayer;
+    RTMPPusher				_pusher;
 
-	// Overrides
+    // Overrides
 public:
-	virtual BOOL InitInstance();
+    virtual BOOL InitInstance();
 
-	CameraController*		_controller;
+    CameraController*		_controller;
 
-	bool	isSDKLoaded = false;
-	bool	has_stated = false;
+    bool	isSDKLoaded = false;
+    bool	has_stated = false;
 
-	friend CameraController*	getController();
+    friend CameraController*	getController();
 
-	// Implementation
+    // Implementation
 
-	DECLARE_MESSAGE_MAP()
+    DECLARE_MESSAGE_MAP()
 };
 
 inline CameraController* getCameraController() { return static_cast<CCameraControlApp*>(AfxGetApp())->_controller; }

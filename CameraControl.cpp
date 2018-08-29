@@ -19,16 +19,16 @@ static CameraModel* cameraModelFactory(EdsCameraRef camera, EdsDeviceInfo device
 // CCameraControlApp
 
 BEGIN_MESSAGE_MAP(CCameraControlApp, CWinApp)
-	ON_COMMAND(ID_HELP, CWinApp::OnHelp)
+    ON_COMMAND(ID_HELP, CWinApp::OnHelp)
 END_MESSAGE_MAP()
 
 
 // CCameraControlApp construction
 
 CCameraControlApp::CCameraControlApp() {
-	// TODO: add construction code here,
-	// Place all significant initialization in InitInstance
-	_controller = nullptr;
+    // TODO: add construction code here,
+    // Place all significant initialization in InitInstance
+    _controller = nullptr;
 }
 
 
@@ -38,32 +38,32 @@ CCameraControlApp theApp;
 
 // CCameraControlApp initialization
 BOOL CCameraControlApp::InitInstance() {
-	InitCommonControls();
-	CWinApp::InitInstance();
+    InitCommonControls();
+    CWinApp::InitInstance();
 
-	//Create CameraController
-	_controller = new CameraController();
+    //Create CameraController
+    _controller = new CameraController();
 
-	//Create View Dialog
-	CCameraControlDlg			view;
+    //Create View Dialog
+    CCameraControlDlg			view;
 
-	// Send Model Event to view	
-	view.setCameraController(_controller);
+    // Send Model Event to view	
+    view.setCameraController(_controller);
 
-	m_pMainWnd = &view;
-	INT_PTR nResponse = view.DoModal();
-	return true;
+    m_pMainWnd = &view;
+    INT_PTR nResponse = view.DoModal();
+    return true;
 
-	return false;
+    return false;
 }
 
 
 static CameraModel* cameraModelFactory(EdsCameraRef camera, EdsDeviceInfo deviceInfo) {
-	// if Legacy protocol.
-	if (deviceInfo.deviceSubType == 0) {
-		return new CameraModelLegacy(camera);
-	}
+    // if Legacy protocol.
+    if (deviceInfo.deviceSubType == 0) {
+        return new CameraModelLegacy(camera);
+    }
 
-	// PTP protocol.
-	return new CameraModel(camera);
+    // PTP protocol.
+    return new CameraModel(camera);
 }

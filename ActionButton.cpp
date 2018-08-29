@@ -20,21 +20,18 @@
 /////////////////////////////////////////////////////////////////////////////
 // ActionButton
 
-CActionButton::CActionButton()
-{
+CActionButton::CActionButton() {
 }
 
-CActionButton::~CActionButton()
-{
+CActionButton::~CActionButton() {
 }
 
 
 BEGIN_MESSAGE_MAP(CActionButton, CButton)
-	ON_CONTROL_REFLECT(BN_CLICKED, OnClicked)
+    ON_CONTROL_REFLECT(BN_CLICKED, OnClicked)
 END_MESSAGE_MAP()
 
 //ActionButton  message handler
-void CActionButton::OnClicked() 
-{
-	fireEvent();
+void CActionButton::OnClicked() {
+    fireEvent();
 }

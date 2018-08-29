@@ -7,26 +7,26 @@
 // RTMPPusher
 
 class RTMPPusher : public CStatic, public ActionSource, public Observer {
-	DECLARE_DYNAMIC(RTMPPusher)
+    DECLARE_DYNAMIC(RTMPPusher)
 
 private:
-	BOOL active;
-	RTMPStreamer    streamer;
+    BOOL           active;
+    RTMPStreamer   streamer;
 
 public:
-	RTMPPusher();
-	virtual ~RTMPPusher();
+    RTMPPusher();
+    virtual ~RTMPPusher();
 
-	// Actions
-	bool startStreaming(const char* url);
-	void stopStreaming();
+    // Actions
+    bool startStreaming(const char* url);
+    void stopStreaming();
 
-	//observer
-	virtual void update(Observable* from, CameraEvent *e);
+    //observer
+    virtual void update(Observable* from, CameraEvent *e);
 
 protected:
-	LRESULT dataChanged(EVF_DATASET* dataset);
-	
+    LRESULT dataChanged(EVF_DATASET* dataset);
+
 };
 
 

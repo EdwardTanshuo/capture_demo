@@ -8,8 +8,8 @@
 
 IMPLEMENT_DYNAMIC(RTMPPusher, CStatic)
 RTMPPusher::RTMPPusher() {
-	active = FALSE;
-	streamer = RTMPStreamer();
+    active = FALSE;
+    streamer = RTMPStreamer();
 }
 
 RTMPPusher::~RTMPPusher() {
@@ -18,65 +18,65 @@ RTMPPusher::~RTMPPusher() {
 
 // RTMPPusher Actions
 bool RTMPPusher::startStreaming(const char* url) {
-	return streamer.init_componets(url);
+    return streamer.init_componets(url);
 }
 
 void RTMPPusher::stopStreaming() {
-	streamer.destroy_componets();
+    streamer.destroy_componets();
 }
 
 // RTMPPusher messge handler
 
 void RTMPPusher::update(Observable* from, CameraEvent *e) {
 
-	std::string event = e->getEvent();
+    std::string event = e->getEvent();
 
-	if (event == "EvfDataChanged") {
-		EVF_DATASET data = *static_cast<EVF_DATASET *>(e->getArg());
+    if (event == "EvfDataChanged") {
+        EVF_DATASET data = *static_cast<EVF_DATASET *>(e->getArg());
 
-		// push buffer
-		dataChanged(&data);
+        // push buffer
+        dataChanged(&data);
 
-		EdsInt32 propertyID = kEdsPropID_FocusInfo;
-		fireEvent("get_Property", &propertyID);
+        EdsInt32 propertyID = kEdsPropID_FocusInfo;
+        fireEvent("get_Property", &propertyID);
 
-		// Download image data.
-		fireEvent("downloadEVF");
-	}
+        // Download image data.
+        fireEvent("downloadEVF");
+    }
 
-	if (event == "PropertyChanged") {
-		EdsInt32 proeprtyID = *static_cast<EdsInt32 *>(e->getArg());
-		if (proeprtyID == kEdsPropID_Evf_OutputDevice) {
-			CameraModel* model = (CameraModel *)from;
-			EdsUInt32 device = model->getEvfOutputDevice();
+    if (event == "PropertyChanged") {
+        EdsInt32 proeprtyID = *static_cast<EdsInt32 *>(e->getArg());
+        if (proeprtyID == kEdsPropID_Evf_OutputDevice) {
+            CameraModel* model = (CameraModel *)from;
+            EdsUInt32 device = model->getEvfOutputDevice();
 
-			// PC live view has started.
-			if (!active && (device & kEdsEvfOutputDevice_PC) != 0) {
-				active = TRUE;
-				// Start download of image data.
-				fireEvent("downloadEVF");
-			}
+            // PC live view has started.
+            if (!active && (device & kEdsEvfOutputDevice_PC) != 0) {
+                active = TRUE;
+                // Start download of image data.
+                fireEvent("downloadEVF");
+            }
 
-			// PC live view has ended.
-			if (active && (device & kEdsEvfOutputDevice_PC) == 0) {
-				active = FALSE;
-			}
-		}
-	}
+            // PC live view has ended.
+            if (active && (device & kEdsEvfOutputDevice_PC) == 0) {
+                active = FALSE;
+            }
+        }
+    }
 }
 
 LRESULT RTMPPusher::dataChanged(EVF_DATASET* dataset) {
-	EdsUInt64 size;
+    EdsUInt64 size;
 
-	unsigned char* pbyteImage = NULL;
+    unsigned char* pbyteImage = NULL;
 
-	// Get image (JPEG) pointer.
-	EdsGetPointer(dataset->stream, (EdsVoid**)&pbyteImage);
+    // Get image (JPEG) pointer.
+    EdsGetPointer(dataset->stream, (EdsVoid**)&pbyteImage);
 
-	if (pbyteImage != NULL) {
-		EdsGetLength(dataset->stream, &size);
-		// Push stream
-		streamer.push_buffer(pbyteImage, size);
-	}
-	return 0;
+    if (pbyteImage != NULL) {
+        EdsGetLength(dataset->stream, &size);
+        // Push stream
+        streamer.push_buffer(pbyteImage, size);
+    }
+    return 0;
 }
