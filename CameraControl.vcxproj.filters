@@ -96,6 +96,9 @@
     <ClCompile Include="InliteCOMClient.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="Cluster.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActionButton.h">
@@ -251,9 +254,6 @@
     <ClInclude Include="MultipartParser.h">
       <Filter>header\Http</Filter>
     </ClInclude>
-    <ClInclude Include="QR\QuadTree.h">
-      <Filter>header\BarcodeSorter</Filter>
-    </ClInclude>
     <ClInclude Include="QR\BarcodeSorter.h">
       <Filter>header\BarcodeSorter</Filter>
     </ClInclude>
@@ -265,6 +265,12 @@
     </ClInclude>
     <ClInclude Include="InliteCOMClient.h">
       <Filter>header\InliteClient</Filter>
+    </ClInclude>
+    <ClInclude Include="QR\QuadTree.h">
+      <Filter>header\BarcodeSorter</Filter>
+    </ClInclude>
+    <ClInclude Include="Cluster.h">
+      <Filter>header\BarcodeSorter</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

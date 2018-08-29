@@ -149,7 +149,7 @@ namespace tree {
 			bsd_queue = next_bsd_queue;
 		}
 
-		// sort and return
+		// sort and return nodes array
 		std::sort(nodes.begin(), nodes.end(), sort_function);
 		return nodes;
 	}

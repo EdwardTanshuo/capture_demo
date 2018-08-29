@@ -69,6 +69,7 @@ public:
 
 		auto temp_array = tree::TreeNode::sort_nodes(nodes, _cos_angle, _max_distance_h, _max_distance_v, _w, _h);
 		std::vector<std::pair<std::string, std::wstring>> result;
+		// Calculate well info for all barcodes 
 		for (auto iter : temp_array) {
 			char prefix = iter->y + 'A';
 			std::string well;
