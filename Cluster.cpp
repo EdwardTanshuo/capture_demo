@@ -8,6 +8,14 @@ bool is_adjacent(std::pair<std::pair<int, int>, int> e, int max_dist) {
     return e.second <= max_dist;
 }
 
+std::vector<int> find_adjacent_node(std::vector<std::pair<std::pair<int, int>, int>> added_node, int node) {
+    for (auto another_node : added_node) {
+        
+    }
+    return std::vector<int>();
+}
+
+
 void cluster::Cluster::gen_edges() {
     int i, j;
     int len = this->_cluster_nodes.size();
@@ -29,8 +37,12 @@ void cluster::Cluster::add_edges(int max_len) {
         ) {
         auto edge = std::make_pair(iter->first, iter->second);
         if (is_adjacent(edge, max_len))
-            this->_added_endges.push_back(edge);
+            this->_added_edges.push_back(edge);
     }
 
-    std::sort(this->_added_endges.begin(), this->_added_endges.end(), dist_ascending_order);
+    std::sort(this->_added_edges.begin(), this->_added_edges.end(), dist_ascending_order);
+}
+
+tree::TreeNode* cluster::Cluster::gen_quadtree() {
+    return nullptr;
 }

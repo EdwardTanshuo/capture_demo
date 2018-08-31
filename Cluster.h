@@ -40,7 +40,7 @@ namespace cluster {
     private:
         std::vector<ClusterNode> _cluster_nodes;
         std::map<std::pair<int, int>, int> _all_edges;
-        std::vector<std::pair<std::pair<int, int>, int>> _added_endges;
+        std::vector<std::pair<std::pair<int, int>, int>> _added_edges;
 
         void gen_edges();
         void add_edges(int max_len);

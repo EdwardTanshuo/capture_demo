@@ -44,5 +44,5 @@
 // import Inlite COM
 #pragma warning(disable:4786) 
 #pragma warning(disable:4996) 
-#import  "progid:ClearImage.ClearImage" exclude("LONG_PTR") exclude("ULONG_PTR") no_namespace  named_guids
+#import "progid:ClearImage.ClearImage" exclude("LONG_PTR") exclude("ULONG_PTR") no_namespace named_guids
 void dump_com_error(_com_error &e);

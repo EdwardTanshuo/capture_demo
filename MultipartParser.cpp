@@ -96,5 +96,5 @@ namespace web {
             return;
         }
 
-    } //namespace web::http
-} //namespace web
+    }
+}

@@ -18,53 +18,15 @@ bool sort_function(const tree::TreeNode* a, const tree::TreeNode* b) {
 }
 
 namespace tree {
-    std::vector<TreeNode*> TreeNode::sort_nodes(std::vector<TreeNode*> nodes,
+    std::vector<TreeNode*> TreeNode::sort_nodes(
+        std::vector<TreeNode*> nodes,
+        std::vector<std::pair<Coordinate, Coordinate>> &edges,
         float max_cos_angle,
         float max_dist_h,
         float max_dist_v,
         int w,
         int h) {
         int i, j, size = nodes.size();
-
-        /*// find the min distance in horizontal direction
-        int min_h = MAX_INT;
-        for (i = 0; i < size; i++) {
-         for (j = 0; j < size; j++) {
-          if (i != j) {
-           if (
-            tree::TreeNode::is_left(nodes[i], nodes[j], max_cos_angle)
-            ||
-            tree::TreeNode::is_right(nodes[i], nodes[j], max_cos_angle)
-            ) {
-            auto dist = tree::TreeNode::distance(nodes[i], nodes[j]);
-            if (dist < min_h) {
-             min_h = dist;
-            }
-           }
-          }
-         }
-        }
-        max_dist_h = 1.6 * (float)min_h;
-
-        // find the min distance in vertical direction
-        int min_v = MAX_INT;
-        for (i = 0; i < size; i++) {
-         for (j = 0; j < size; j++) {
-          if (i != j) {
-           if (
-            tree::TreeNode::is_up(nodes[i], nodes[j], max_cos_angle)
-            ||
-            tree::TreeNode::is_down(nodes[i], nodes[j], max_cos_angle)
-            ) {
-            auto dist = tree::TreeNode::distance(nodes[i], nodes[j]);
-            if (dist < min_v) {
-             min_v = dist;
-            }
-           }
-          }
-         }
-        }
-        max_dist_v = 1.6 * (float)min_v;*/
 
         // gen quad tree
         for (i = 0; i < size; i++) {
@@ -77,6 +39,10 @@ namespace tree {
                         max_dist_h,
                         max_dist_v
                     );
+                    if (result && i < j) {
+                        // TODO
+                        edges.push_back(std::make_pair(nodes[i]->coor, nodes[j]->coor));
+                    }
                 }
             }
         }
