@@ -4,17 +4,23 @@
 #include <utility>
 #include <vector>
 
-#include "base64.h"
+//#include "base64.h"
 #include "BarcodeSorter.h"
 #include "MultipartParser.h"
 
 #define AUTH_CODE L"AOah5cKhAxgrd2YrCIYYVqDzFgz539Zn"
 
-pplx::task<std::vector<Barcode>> InliteClient::post_image(const unsigned char* data, int in_len) {
+/*pplx::task<std::vector<Barcode>> InliteClient::post_image(const unsigned char* data, int in_len) {
     uri host(U(INLITE_HOST));
     std::string base64_str = base64_encode(data, in_len);
 
     return this->post_image_base64(host, base64_str);
+}*/
+
+pplx::task<std::vector<Barcode>> InliteClient::post_image(const std::string& base64_image) {
+    uri host(U(INLITE_HOST));
+
+    return this->post_image_base64(host, base64_image);
 }
 
 pplx::task<std::vector<Barcode>> InliteClient::post_image_base64(const uri& host, const std::string& base64_image) {
@@ -62,15 +68,6 @@ pplx::task<std::vector<Barcode>> InliteClient::post_image_base64(const uri& host
             return std::vector<Barcode>();
         }
 
-        BarcodeSorter sorter(0.866, 1500, 1500, 0, 0);
-        std::vector<std::pair<tree::Coordinate, tree::Coordinate>> edges;
-        auto sorted_arr = sorter.process_barcodes(barcodes, edges);
-        std::vector<Barcode> result;
-        for (auto iter : sorted_arr) {
-            auto barcode = BarcodeSorter::peek_barcode(barcodes, iter.second);
-            barcode.well = iter.first;
-            result.push_back(barcode);
-        }
-        return result;
+        return barcodes;
     });
 }
