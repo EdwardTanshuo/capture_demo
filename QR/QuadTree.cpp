@@ -25,7 +25,7 @@ namespace tree {
         float max_dist_h,
         float max_dist_v,
         int w,
-        int h) {
+        int h) throw(std::exception) {
         int i, j, size = nodes.size();
 
         // gen quad tree
@@ -35,7 +35,8 @@ namespace tree {
                     bool result = false;
                     nodes[i]->insert_child(
                         nodes[j],
-                        result, max_cos_angle,
+                        result, 
+                        max_cos_angle,
                         max_dist_h,
                         max_dist_v
                     );
@@ -71,14 +72,16 @@ namespace tree {
         int top_vetex_size = top_vetex.size();
 
         // find quard tree root
-        left_vetex.insert(left_vetex.end(), top_vetex.begin(), top_vetex.end());
-        tree::TreeNode* root = nullptr;
-        for (auto iter : left_vetex) {
-            if (vetex_counter[iter] == 1) {
-                root = iter;
-            }
-            vetex_counter[iter] += 1;
+        std::vector<tree::TreeNode*> roots;
+        std::set_intersection(
+            top_vetex.begin(), top_vetex.end(), 
+            left_vetex.begin(), left_vetex.end(),
+            std::back_inserter(roots)
+        );
+        if (roots.size() == 0) {
+            throw std::exception("No top left node detected");
         }
+        tree::TreeNode* root = roots[0];
 
         // bsd 
         bsd_queue.push_back(root);

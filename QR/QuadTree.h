@@ -84,20 +84,20 @@ namespace tree {
         }
 
         void insert_child(TreeNode* new_node, bool& flag, float max_cos_angle, float max_dist_h, float max_dist_v) {
-            if (is_next_up(this, new_node, max_cos_angle, max_dist_v)) {
+            if (is_next_up(this, new_node, max_cos_angle, max_dist_v) && this->children[UP] == nullptr) {
                 is_next_up(this, new_node, max_cos_angle, max_dist_v);
                 this->children[UP] = new_node;
                 flag = true;
             }
-            else if (is_next_down(this, new_node, max_cos_angle, max_dist_v)) {
+            else if (is_next_down(this, new_node, max_cos_angle, max_dist_v) && this->children[DOWN] == nullptr) {
                 this->children[DOWN] = new_node;
                 flag = true;
             }
-            else if (is_next_left(this, new_node, max_cos_angle, max_dist_h)) {
+            else if (is_next_left(this, new_node, max_cos_angle, max_dist_h) && this->children[LEFT] == nullptr) {
                 this->children[LEFT] = new_node;
                 flag = true;
             }
-            else if (is_next_right(this, new_node, max_cos_angle, max_dist_h)) {
+            else if (is_next_right(this, new_node, max_cos_angle, max_dist_h) && this->children[RIGHT] == nullptr) {
                 this->children[RIGHT] = new_node;
                 flag = true;
             }
@@ -168,7 +168,7 @@ namespace tree {
             float max_dist_v,
             int w,
             int h
-        );
+        ) throw(std::exception);
 
     };
 }
