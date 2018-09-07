@@ -118,6 +118,30 @@ namespace tree {
             bsd_queue = next_bsd_queue;
         }
 
+        // normalize the node coordinates
+        int min_x = 0xffff;
+        int min_y = 0xffff;
+        int d_x = 0;
+        int d_y = 0;
+        for (auto node : nodes) {
+            if (node->x < min_x) {
+                min_x = node->x;
+            }
+            if (node->y < min_y) {
+                min_y = node->y;
+            }
+        }
+        if (min_x < 0) {
+            d_x = -min_x;
+        }
+        if (min_y < 0) {
+            d_y = -min_y;
+        }
+        for (auto node : nodes) {
+            node->x += d_x;
+            node->y += d_y;
+        }
+
         // sort and return nodes array
         std::sort(nodes.begin(), nodes.end(), sort_function);
         return nodes;
