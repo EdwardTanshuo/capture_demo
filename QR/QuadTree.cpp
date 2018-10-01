@@ -73,6 +73,8 @@ namespace tree {
 
         // find quard tree root
         std::vector<tree::TreeNode*> roots;
+        std::sort(top_vetex.begin(), top_vetex.end());
+        std::sort(left_vetex.begin(), left_vetex.end());
         std::set_intersection(
             top_vetex.begin(), top_vetex.end(), 
             left_vetex.begin(), left_vetex.end(),
@@ -83,7 +85,7 @@ namespace tree {
         }
         tree::TreeNode* root = roots[0];
 
-        // bsd 
+        // bfs
         bsd_queue.push_back(root);
         while (bsd_queue.size() > 0) {
             std::vector<TreeNode*> next_bsd_queue;

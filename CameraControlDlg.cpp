@@ -102,8 +102,14 @@ static void process_image(void* lParam) {
     auto strBody = body.serialize();
     //::MessageBoxW(NULL, strBody.c_str(), L"barcodes", MB_OK);
     auto flimsRspPromise = flimsClient.notify_flim(body);
-    flimsRspPromise.wait();
-    auto flimsRsp = flimsRspPromise.get();
+    try {
+        flimsRspPromise.wait();
+        auto flimsRsp = flimsRspPromise.get();
+    }
+    catch (http_exception e) {
+        
+    }
+   
     //::MessageBoxW(NULL, flimsRsp.serialize().c_str(), L"flims response" , MB_OK);
     /*char buffer[1024];
     sprintf(buffer, "Device Status: connected: [ %s ]", "Ready");

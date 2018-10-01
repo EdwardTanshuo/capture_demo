@@ -13,8 +13,7 @@
 
 #define NORM(coor) (std::sqrt((coor).x*(coor).x+(coor).y*(coor).y))
 
-#define DIST(coor_a, coor_b) (std::sqrt(((coor_a).x-(coor_b).x)*((coor_a).x-(coor_b).x)+ \
-((coor_a).y-(coor_b).y)*((coor_a).y-(coor_b).y)))
+#define DIST(coor_a, coor_b) (std::sqrt(((coor_a).x-(coor_b).x)*((coor_a).x-(coor_b).x)+((coor_a).y-(coor_b).y)*((coor_a).y-(coor_b).y)))
 
 #define INNER_PRODUCT(coor_a, coor_b) ((coor_a).x*(coor_b).x+(coor_a).y*(coor_b).y)
 
